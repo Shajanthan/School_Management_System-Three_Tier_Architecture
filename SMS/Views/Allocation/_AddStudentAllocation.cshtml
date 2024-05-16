@@ -10,7 +10,7 @@
 {
 
     @Html.HiddenFor(model => model.StudentAllocationID)
-    @Html.HiddenFor(model => model.SubjectAllocationID, new { id = "SubjectAllocationID" })
+    @Html.HiddenFor(model => model.SubjectAllocationID, new { id = "subAlloID" })
 
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -22,7 +22,7 @@
             @Html.LabelFor(model => model.StudentID, "Student")<span class="required-asterisk"> *</span>
         </div>
         <div class="col-md-8 ">
-            @if (Model.SubjectAllocationID != 0)
+            @if (Model.StudentAllocationID != 0)
             {
                 @Html.DropDownListFor(model => model.StudentID, new SelectList(ViewBag.Students, "StudentID", "DisplayName"), new { @class = "form-select", disabled = "disabled" })
                 @Html.HiddenFor(model => model.StudentID)
@@ -59,10 +59,12 @@
                 <option value="">Select Teacher</option>
             </select>
             @Html.ValidationMessage("TeacherID", "", new { @class = "text-danger" })
-           
+
         </div>
 
     </div>
+
+   
 
     <div class="form-group row m-2">
         <div class="col-md-10 offset-md-4">
@@ -73,7 +75,7 @@
     </div>
 
     <script>
-    //Subject Teachers
+        //Subject Teachers
         $('#subjectDropdown').change(function () {
             var subjectId = $(this).val();
             if (subjectId !== '') {
@@ -85,7 +87,7 @@
                         $('#teacherDropdown').empty();
                         $('#teacherDropdown').append($('<option>', {
                             value: '',
-                            text: 'Select Teacher'
+                            text: '-Select Teacher-'
                         }));
                         $.each(response, function (index, item) {
                             $('#teacherDropdown').append($('<option>', {
@@ -102,7 +104,7 @@
                 $('#teacherDropdown').empty();
                 $('#teacherDropdown').append($('<option>', {
                     value: '',
-                    text: 'Select Teacher'
+                    text: '-Select Teacher-'
                 }));
             }
         });
@@ -117,7 +119,7 @@
                     type: 'GET',
                     data: { subjectID: subjectID, teacherID: teacherID },
                     success: function (data) {
-                        $('#SubjectAllocationID').val(data);
+                        $('#subAlloID').val(data);
                     },
                     error: function (xhr, status, error) {
                         console.error(error);

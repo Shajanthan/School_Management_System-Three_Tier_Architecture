@@ -212,7 +212,6 @@ namespace SMS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddStudentAllocation(StudentAllocationBO studentAllocation)
         {
-            ViewBag.IsEditing = false;
 
             var msg = "";
             if (ModelState.IsValid)

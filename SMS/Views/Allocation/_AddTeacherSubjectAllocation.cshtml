@@ -27,7 +27,7 @@
             }
             else
             {
-                @Html.DropDownListFor(model => model.TeacherID, new SelectList(ViewBag.Teachers, "TeacherID", "DisplayName"), "--Select Teacher--", new { @class = "form-select" })
+                @Html.DropDownListFor(model => model.TeacherID, new SelectList(ViewBag.Teachers, "TeacherID", "DisplayName"), "-Select Teacher-", new { @class = "form-select" })
             }
 
 
@@ -43,7 +43,7 @@
                 @Html.LabelFor(model => model.SubjectID, "Subject")<span class="required-asterisk"> *</span>
             </div>
             <div class="col-md-8 ">
-                @Html.DropDownListFor(model => model.SubjectID, new SelectList(ViewBag.Subjects, "SubjectID", "Name"), "--Select Subject--", new { @class = "form-select" })
+                @Html.DropDownListFor(model => model.SubjectID, new SelectList(ViewBag.Subjects, "SubjectID", "Name"), "-Select Subject-", new { @class = "form-select" })
                 @Html.ValidationMessageFor(model => model.SubjectID, "", new { @class = "text-danger" })
             </div>
         </div>
