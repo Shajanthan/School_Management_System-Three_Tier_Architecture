@@ -1,0 +1,60 @@
+﻿@model SMS_Models.Allocation.SubjectAllocationBO
+
+@using (Ajax.BeginForm("AddTeacherSubjectAllocation", "Allocation", new AjaxOptions
+{
+    HttpMethod = "POST",
+    OnSuccess = "addTeacherSubjectAllocationSuccess",
+    OnFailure = "addTeacherSubjectAllocationFailure"
+}, new { @class = "border p-4 mx-auto Customform", style = "max-width: 600px;" }))
+{
+  
+    @Html.HiddenFor(model => model.SubjectAllocationID)
+
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <!-- Dropdown for selecting teacher -->
+    <div class="form-group row m-1">
+        <div class="col-md-4 p-2">
+            @Html.LabelFor(model => model.TeacherID, "Teacher")<span class="required-asterisk">*</span>
+        </div>
+        <div class="col-md-8 ">
+
+            @if (Model.SubjectAllocationID != 0)
+            {
+                @Html.DropDownListFor(model => model.TeacherID, new SelectList(ViewBag.Teachers, "TeacherID", "DisplayName"), new { @class = "form-select", disabled = "disabled" })
+                @Html.HiddenFor(model => model.TeacherID)
+            }
+            else
+            {
+                @Html.DropDownListFor(model => model.TeacherID, new SelectList(ViewBag.Teachers, "TeacherID", "DisplayName"), "--Select Teacher--", new { @class = "form-select" })
+            }
+
+
+            @Html.ValidationMessageFor(model => model.TeacherID, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+
+    <div class="justify-content-center align-items-center">
+        <!-- Dropdown for selecting subject -->
+        <div class="form-group row m-1">
+            <div class="col-md-4 p-2">
+                @Html.LabelFor(model => model.SubjectID, "Subject")<span class="required-asterisk"> *</span>
+            </div>
+            <div class="col-md-8 ">
+                @Html.DropDownListFor(model => model.SubjectID, new SelectList(ViewBag.Subjects, "SubjectID", "Name"), "--Select Subject--", new { @class = "form-select" })
+                @Html.ValidationMessageFor(model => model.SubjectID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row m-2">
+            <div class="col-md-10 offset-md-4">
+                <br />
+                <input type="submit" value="@((Model.SubjectAllocationID==0 ? "Create" : "Update"))" class="btn btn-primary" />
+                <a href="#" class="btn btn-secondary" onclick="backSubjectAllocation()">Back</a>
+            </div>
+        </div>
+    </div>  
+
+}

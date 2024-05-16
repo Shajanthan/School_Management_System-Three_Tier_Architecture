@@ -1,0 +1,185 @@
+﻿* {
+    box-sizing: border-box;
+}
+
+/*-----------------------------------------Homepage-----------------------------*/
+
+.welcome-text {
+    text-align: justify;
+}
+
+
+/*Card*/
+.Navcard {
+    transition: all 0.4s;
+    border-radius: 20px;
+    color: black;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+
+    .Navcard h4 {
+        padding: 30px;
+    }
+
+    .Navcard:hover {
+        background-color: #011f4b;
+    }
+
+        .Navcard:hover h4 {
+            color: white;
+        }
+
+
+/*---------------------Tables---------------------------------------*/
+
+#addNew {
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    transition: all 0.4s;
+}
+
+
+table {
+    margin: 20px 0;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+
+.tableheading {
+    background-color: #b3cde0;
+    color: black;
+}
+/*------------------------------------------Footer------------------------------------*/
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+
+/*Custom Form*/
+.Customform {
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    border-radius: 20px;
+    border: 1px solid #011f4b;
+}
+
+/*Heading*/
+
+.headings {
+    margin: 10px 0 20px;
+    padding: 5px 5px 5px 40px;
+    border-radius: 8px;
+    background-color: #005b96;
+    color: white;
+}
+
+
+.main_content {
+    padding: 30px 15px;
+}
+
+.layout {
+    border: 1px solid gray;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+
+
+.crudLayoud {
+    padding: 15px;
+}
+
+.partialLayout {
+    margin: 5px 0px 25px 0;
+}
+
+.modal-header {
+    background-color: #011f4b;
+    text-align: center;
+    color: white;
+}
+/**/
+.navbar {
+    background-color: #011f4b;
+}
+
+    .navbar a {
+        color: white;
+    }
+
+    .navbar button {
+        padding: 2px;
+        border-radius: 5px;
+        background-color: white;
+    }
+
+    .navbar a:hover {
+        color: white;
+    }
+
+#navbarNav {
+    color: white;
+}
+
+.navbar-nav .nav-link {
+    margin-right: 20px;
+    position: relative;
+}
+
+    .navbar-nav .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        border-radius: 15px;
+        left: 0;
+        width: 0;
+        height: 4px;
+        background-color: white;
+        transition: width 0.4s ease;
+    }
+
+    .navbar-nav .nav-link:hover::after {
+        width: 100%;
+    }
+
+
+/*Buttons*/
+
+#addNew, #addNewStudentAllocation, #addNewSubjectAllocation {
+    background-color: #011f4b;
+    color: white;
+}
+
+#tab1-tab, #tab2-tab {
+    color: black;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+
+    #tab1-tab.active, #tab2-tab.active {
+        background-color: #005b96;
+        color: white;
+    }
+/*Footer*/
+footer {
+    background-color: #011f4b;
+}
+
+
+/*Main Content*/
+.main_content {
+    padding: 10px 0:
+}
+
+
+/*Allocation*/
+
+.allocationContent {
+    padding: 10px 0;
+}
+
+/*required star*/
+
+.required-asterisk {
+    color: red;
+}

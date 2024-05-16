@@ -1,0 +1,130 @@
+﻿@model SMS_Models.Allocation.StudentAllocationBO
+
+
+@using (Ajax.BeginForm("AddStudentAllocation", "Allocation", new AjaxOptions
+{
+    HttpMethod = "POST",
+    OnSuccess = "addStudentAllocationSuccess",
+    OnFailure = "addStudentAllocationFailure"
+}, new { @class = "border p-4 mx-auto Customform", style = "max-width: 600px;" }))
+{
+
+    @Html.HiddenFor(model => model.StudentAllocationID)
+    @Html.HiddenFor(model => model.SubjectAllocationID, new { id = "SubjectAllocationID" })
+
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+    <!-- Dropdown for selecting subject -->
+    <div class="form-group row m-1">
+        <div class="col-md-4 p-2">
+            @Html.LabelFor(model => model.StudentID, "Student")<span class="required-asterisk"> *</span>
+        </div>
+        <div class="col-md-8 ">
+            @if (Model.SubjectAllocationID != 0)
+            {
+                @Html.DropDownListFor(model => model.StudentID, new SelectList(ViewBag.Students, "StudentID", "DisplayName"), new { @class = "form-select", disabled = "disabled" })
+                @Html.HiddenFor(model => model.StudentID)
+            }
+            else
+            {
+                @Html.DropDownListFor(model => model.StudentID, new SelectList(ViewBag.Students, "StudentID", "DisplayName"), "Select Student", new { @class = "form-select" })
+            }
+            @Html.ValidationMessageFor(model => model.StudentID, "", new { @class = "text-danger" })
+
+        </div>
+    </div>
+
+
+    <div class="form-group row m-1">
+        <div class="col-md-4 p-2">
+            @Html.Label("Subject", htmlAttributes: new { @class = "control-label" })
+        </div>
+        <div class="col-md-8">
+            <select id="subjectDropdown" class="form-select">
+                <option value="">Select Subject</option>
+            </select>
+            @Html.ValidationMessage("SubjectID", "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+
+    <div class="form-group row m-1">
+        <div class="col-md-4 p-2">
+            @Html.Label("Teacher", htmlAttributes: new { @class = "control-label" })
+        </div>
+        <div class="col-md-8">
+            <select id="teacherDropdown" class="form-select">
+                <option value="">Select Teacher</option>
+            </select>
+            @Html.ValidationMessage("TeacherID", "", new { @class = "text-danger" })
+           
+        </div>
+
+    </div>
+
+    <div class="form-group row m-2">
+        <div class="col-md-10 offset-md-4">
+            <br />
+            <input type="submit" value="@((Model.StudentAllocationID==0 ? "Create" : "Update"))" class="btn btn-primary" />
+            <a href="#" class="btn btn-secondary" onclick="backStudentAllocation()">Back</a>
+        </div>
+    </div>
+
+    <script>
+    //Subject Teachers
+        $('#subjectDropdown').change(function () {
+            var subjectId = $(this).val();
+            if (subjectId !== '') {
+                $.ajax({
+                    url: '/Allocation/GetTeachersBySubject',
+                    type: 'GET',
+                    data: { subjectId: subjectId },
+                    success: function (response) {
+                        $('#teacherDropdown').empty();
+                        $('#teacherDropdown').append($('<option>', {
+                            value: '',
+                            text: 'Select Teacher'
+                        }));
+                        $.each(response, function (index, item) {
+                            $('#teacherDropdown').append($('<option>', {
+                                value: item.Value,
+                                text: item.Text
+                            }));
+                        });
+                    },
+                    error: function () {
+                        console.log('Error fetching teachers.');
+                    }
+                });
+            } else {
+                $('#teacherDropdown').empty();
+                $('#teacherDropdown').append($('<option>', {
+                    value: '',
+                    text: 'Select Teacher'
+                }));
+            }
+        });
+
+        $('#teacherDropdown').change(function () {
+            var teacherID = $(this).val();
+            var subjectID = $('#subjectDropdown').val();
+
+            if (subjectID && teacherID) {
+                $.ajax({
+                    url: '/Allocation/GetAllocationID',
+                    type: 'GET',
+                    data: { subjectID: subjectID, teacherID: teacherID },
+                    success: function (data) {
+                        $('#SubjectAllocationID').val(data);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            }
+        });
+    </script>
+
+}

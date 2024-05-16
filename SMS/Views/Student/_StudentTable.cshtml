@@ -1,0 +1,39 @@
+﻿
+@if (Model != null)
+{
+    foreach (var student in Model)
+    {
+        <tr>
+            <td>
+                @if (student.IsEnable)
+                {
+                    <button type="button" class="btn btn-success btn-sm" onclick="toggleEnable('@student.StudentID', false,'@student.DisplayName')"> <i class="btn-success bi bi-power" style="filter: grayscale(100%)"></i></button>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-danger btn-sm" onclick="toggleEnable('@student.StudentID', true,'@student.DisplayName')"> <i class="btn-success bi bi-power" style="filter: grayscale(100%)"></i></button>
+                }
+            </td>
+            <td>@student.StudentRegNo</td>
+            <td>@student.FirstName</td>
+            <td>@student.LastName</td>
+            <td>@student.DisplayName</td>
+            <td>@student.Email</td>
+            <td>@student.Gender</td>
+            <td>@student.ContactNo</td>
+            <td>
+                <button type="button" class="btn btn-sm btn-primary" onclick="editStudent('@student.StudentID')"><i class="bi bi-pen small-icons"></i></button>
+                <button type="button" class="btn btn-sm btn-danger" onclick="deleteStudent('@student.StudentID',false,'@student.DisplayName')"><i class="bi bi-trash small-icons"></i></button>
+                <button type="button" class="btn btn-sm btn-info m-1" onclick="moreDetails('@student.StudentID',false,'@student.DisplayName')"><i class="bi bi-ticket-detailed small-icons"></i></button>
+
+            </td>
+        </tr>
+    }
+
+}
+else
+{
+    <tr>
+        <td colspan="9">No data found</td>
+    </tr>
+}

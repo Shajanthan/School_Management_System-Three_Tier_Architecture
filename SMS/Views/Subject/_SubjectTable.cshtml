@@ -1,0 +1,31 @@
+﻿@if (Model != null)
+{
+    foreach (var subject in Model)
+    {
+        <tr>
+            <td>
+                @if (subject.IsEnable)
+                {
+                    <button type="button" class="btn btn-success btn-sm" onclick="toggleEnable('@subject.SubjectID', false,'@subject.Name')"> <i class="btn-success bi bi-power" style="filter: grayscale(100%)"></i></button>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-danger btn-sm" onclick="toggleEnable('@subject.SubjectID', false,'@subject.Name')"> <i class="btn-success bi bi-power" style="filter: grayscale(100%)"></i></button>
+                }
+            </td>
+            <td>@subject.SubjectCode</td>
+            <td>@subject.Name</td>
+            <td>
+                <button type="button" class="btn btn-sm btn-primary" onclick="editSubject('@subject.SubjectID')"><i class="bi bi-pen small-icons"></i></button>
+                <button type="button" class="btn btn-sm btn-danger" onclick="deleteSubject('@subject.SubjectID',false,'@subject.Name')"><i class="bi bi-trash small-icons"></i></button>
+            </td>
+        </tr>
+    }
+}
+else
+{
+    <tr>
+        <td colspan="4">No data found</td>
+    </tr>
+}
+

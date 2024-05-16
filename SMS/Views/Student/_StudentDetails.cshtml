@@ -1,0 +1,18 @@
+﻿@model SMS_ViewModels.Student.StudentViewModel
+<div class="row">
+    <div class="col-md-6">
+        <p><strong>Reg No:</strong> @Model.Student.StudentRegNo</p>
+        <p><strong>First Name:</strong> @Model.Student.FirstName</p>
+        <p><strong>Middle Name:</strong> @Model.Student.MiddleName</p>
+        <p><strong>Last Name:</strong> @Model.Student.LastName</p>
+        <p><strong>Display Name:</strong> @Model.Student.DisplayName</p>
+    </div>
+    <div class="col-md-6">
+        <p><strong>E-mail:</strong> @Model.Student.Email</p>
+        <p><strong>Gender:</strong> @Model.Student.Gender</p>
+        <p><strong>DOB:</strong> @Model.Student.DOB.ToShortDateString()</p>
+        <p><strong>Address:</strong> @Model.Student.Address</p>
+        <p><strong>Contact Number:</strong> @Model.Student.ContactNo</p>
+    </div>
+</div>
+

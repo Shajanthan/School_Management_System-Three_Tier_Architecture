@@ -1,0 +1,18 @@
+﻿@{
+    ViewBag.Title = "Scohol Management System";
+}
+
+<div>
+    <p class="container welcome-text">
+        Welcome to the School Management System index page, where educational administration is simplified through comprehensive functionality. Our platform offers a seamless experience for managing students, teachers, and subjects, including the essential CRUD operations of adding, editing, updating, and reading data. In the student module, administrators can effortlessly add new students, update their information as needed, and generate insightful reports. Teachers can be assigned to subjects through a simple process, ensuring efficient coordination of academic activities. Similarly, subjects can be easily managed, allowing for seamless scheduling and resource allocation.
+    </p>
+
+    <div class="d-flex flex-wrap justify-content-center text-center">
+        <a class="nav-link Navcard p-lg-5 m-4" href="@Url.Action("Index", "Student", new { area = "" })"><h4>Students</h4></a>
+        <a class="nav-link Navcard p-lg-5 m-4" href="@Url.Action("Index", "Teacher", new { area = "" })"><h4>Teacher</h4></a>
+        <a class="nav-link Navcard p-lg-5 m-4" href="@Url.Action("Index", "Subject", new { area = "" })"><h4>Subject</h4></a>
+        <a class="nav-link Navcard p-lg-5 m-4" href="@Url.Action("Index", "Allocation", new { area = "" })"><h4>Allocation</h4></a>
+
+    </div>
+
+</div>

@@ -1,0 +1,98 @@
+﻿@model SMS_Models.Subject.SubjectBO
+
+
+@using (Ajax.BeginForm("AddSubject", "Subject", new AjaxOptions
+{
+    HttpMethod = "POST",
+    OnSuccess = "addSubjectSuccess",
+    OnFailure = "addSubjectFailure"
+}, new { @class = "border p-4 mx-auto Customform", style = "max-width: 500px;" }))
+{
+    
+    
+    @Html.HiddenFor(model => model.SubjectID)
+   
+
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="justify-content-center align-items-center">
+
+        <div class="form-group row m-2">
+            <div class="col-md-4">
+
+                @Html.LabelFor(model => model.SubjectCode, htmlAttributes: new { @class = "col-form-label", style = "word-wrap: break-word;" })<span class="required-asterisk">*</span>
+            </div>
+            <div class="col-md-8 ">
+
+                @Html.EditorFor(model => model.SubjectCode, new { htmlAttributes = new { @class = "form-control", placeholder = "Subject Code", id = "SubjectCode" } })
+                <span id="SubjectCode-error" class="text-danger"></span>
+                @Html.ValidationMessageFor(model => model.SubjectCode, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row m-2">
+            <div class="col-md-4">
+
+                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "col-form-label", style = "word-wrap: break-word;" })<span class="required-asterisk">*</span>
+            </div>
+            <div class="col-md-8">
+
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Subject Name", id = "SubjectName" } })
+                <span id="SubjectName-error" class="text-danger"></span>
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group row m-2">
+            <div class="col-md-4">
+
+                @Html.LabelFor(model => model.IsEnable, htmlAttributes: new { @class = "col-form-label" })
+            </div>
+            <div class="col-md-8">
+
+                <div class="form-check m-3">
+                    @Html.CheckBoxFor(model => model.IsEnable, new { @class = "form-check-input", id = "Enable" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row m-2">
+            <div class="col-md-10 offset-md-4">
+                <br />
+                <input type="submit" value="@((Model.SubjectID==0 ? "Create" : "Update"))" class="btn btn-primary" />
+                <a href="#" class="btn btn-secondary" onclick="backSubject()">Back</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        //SubjectCode Validation
+        $('#SubjectCode').change(function () {
+            var subCode = $(this).val();
+            $.ajax({
+                url: '/Subject/IsSubCodeAvailable',
+                type: 'GET',
+                data: { subCode: subCode },
+                success: function (response) {
+                    $('#SubjectCode-error').text(response ? '' : 'Subject code already exists.');
+                }
+            });
+        });
+
+        //SubjectName Validation
+        $('#SubjectName').change(function () {
+            var subName = $(this).val();
+            $.ajax({
+                url: '/Subject/IsSubNameAvailable',
+                type: 'GET',
+                data: { subName: subName },
+                success: function (response) {
+                    $('#SubjectName-error').text(response ? '' : 'Subject Name already exists.');
+                }
+            });
+        });
+    </script>
+}
