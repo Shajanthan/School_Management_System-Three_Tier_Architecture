@@ -220,7 +220,7 @@ namespace SMS_BL.Student
 
             student.IsEnable = true;
             SaveChanges();
-            msg = "Student " + student.DisplayName + "status is changed to enable";
+            msg = "Student " + student.DisplayName + " status is changed to enable";
             return true;
 
         }

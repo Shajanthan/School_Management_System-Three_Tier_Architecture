@@ -288,6 +288,10 @@ namespace SMS_BL.Allocation
 
             try
             {
+                if (studentAllocation.SubjectAllocationID == 0) {
+                    msg = "Please Fill All Details";
+                    return false;
+                }
 
                 if (isStudentAllocated)
                 {
@@ -367,6 +371,12 @@ namespace SMS_BL.Allocation
 
             return allocationID;
         }
+
+        //public List<long> GetSubjectAndTeacher(long id)
+        //{
+
+        //    var
+        //}
        
     }
 }
