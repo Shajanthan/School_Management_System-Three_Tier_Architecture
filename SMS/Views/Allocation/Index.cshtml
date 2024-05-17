@@ -1,4 +1,5 @@
-﻿@{
+﻿@model SMS_ViewModels.Allocation.AllocationViewModel
+@{
     ViewBag.Title = "Allocation";
 }
 
@@ -35,8 +36,9 @@
                             </div>
                         </div>
 
+                        <!--Subject Allocation-->
                         <div class="table-responsive">
-                            <table id="subjectAllocationDetails" class="table table-bordered ">
+                            <table id="subjectAllocationDetails" class="table table-bordered table-striped">
                                 <thead class="tableheading text-center">
                                     <tr>
                                         <th class="sortable">Teacher</th>
@@ -49,8 +51,6 @@
 
                             <div class="container-fluid" style="display:none" id="addTeacherSubjectAllocationForm">
                             </div>
-                            
-
 
                         </div>
                     </div>
@@ -72,9 +72,7 @@
                                 <thead class="tableheading text-center">
                                     <tr>
                                         <th class="sortable">Student</th>
-                                        <th class="sortable">Teacher</th>
-                                        <th class="sortable">Subject</th>
-                                        <th>Actions</th>
+                                        <th>Details</th>
                                     </tr>
                                 </thead>
                                 <tbody class="text-center" id="studentAllocationTableBody"></tbody>
@@ -144,20 +142,35 @@
 
 
 
-        // Load subject data
+         
+        //function loadSubjectAllocationData() {
+        //    $.ajax({
+        //        url: '/Allocation/AllSubjectAllocation',
+        //        type: 'GET',
+        //        success: function (data) {
+        //            $('#subjectAllocationTableBody').empty();
+                    
+        //            var groupedData = groupByTeacher(data.data);
+
+        //            $.each(groupedData, function (teacherName, items) {
+        //               var teacherRow = createTeacherRow(teacherName, items);
+        //                $('#subjectAllocationTableBody').append(teacherRow);
+        //            });
+        //        },
+        //        error: function (error) {
+        //            console.log(error);
+        //            alert('An error occurred while loading data.');
+        //        }
+        //    });
+        //}
+
         function loadSubjectAllocationData() {
             $.ajax({
                 url: '/Allocation/AllSubjectAllocation',
                 type: 'GET',
                 success: function (data) {
-                    $('#subjectAllocationTableBody').empty();
-
-                    var groupedData = groupByTeacher(data.data);
-
-                    $.each(groupedData, function (teacherName, items) {
-                        var teacherRow = createTeacherRow(teacherName, items);
-                        $('#subjectAllocationTableBody').append(teacherRow);
-                    });
+                    $('#subjectAllocationTableBody').html(data);
+                   /* console.log(data);*/
                 },
                 error: function (error) {
                     console.log(error);
@@ -166,37 +179,37 @@
             });
         }
 
-        function groupByTeacher(data) {
-            var groupedData = {};
-            $.each(data, function (index, item) {
-                if (!groupedData[item.TeacherName]) {
-                    groupedData[item.TeacherName] = [];
-                }
-                groupedData[item.TeacherName].push(item);
-            });
-            return groupedData;
-        }
+        //function groupByTeacher(data) {
+        //    var groupedData = {};
+        //    $.each(data, function (index, item) {
+        //        if (!groupedData[item.TeacherName]) {
+        //            groupedData[item.TeacherName] = [];
+        //        }
+        //        groupedData[item.TeacherName].push(item);
+        //    });
+        //    return groupedData;
+        //}
 
-        function createTeacherRow(teacherName, items) {
-            var rows = '';
-            $.each(items, function (index, item) {
-                var buttonGroup = createButtonGroup(item.SubjectAllocationID,"SubjectAllocation");
-                var subjectInfo = '<strong>' + item.SubjectName + '</strong> (Subject Code- ' + item.SubjectCode+')';
-                var row = '<tr>' +
-                    (index === 0 ? '<td rowspan="' + items.length + '">' + '<strong>' + teacherName + '</strong> (Reg No- ' + item.TeacherRegNo + ')</td>' : '') +
-                    '<td>' + subjectInfo + '</td>' +
-                    '<td>' + buttonGroup + '</td>' +
-                    '</tr>';
-                rows += row;
-            });
-            return rows;
-        }
+        //function createTeacherRow(teacherName, items) {
+        //    var rows = '';
+        //    $.each(items, function (index, item) {
+        //        var buttonGroup = createButtonGroup(item.SubjectAllocationID,"SubjectAllocation");
+        //        var subjectInfo = '<strong>' + item.SubjectName + '</strong> (Subject Code- ' + item.SubjectCode+')';
+        //        var row = '<tr>' +
+        //            (index === 0 ? '<td rowspan="' + items.length + '">' + '<strong>' + teacherName + '</strong> (Reg No- ' + item.TeacherRegNo + ')</td>' : '') +
+        //            '<td>' + subjectInfo + '</td>' +
+        //            '<td>' + buttonGroup + '</td>' +
+        //            '</tr>';
+        //        rows += row;
+        //    });
+        //    return rows;
+        //}
 
-        //create a button group
-        function createButtonGroup(subjectAllocationID,fnName) {
-            return '<button type="button" class="btn btn-sm btn-primary" onclick="edit' + fnName +'(\'' + subjectAllocationID + '\')"><i class="bi bi-pen small-icons"></i></button> ' +
-                '<button type="button" class="btn btn-sm btn-danger" onclick="delete' + fnName +'(\'' + subjectAllocationID + '\')"><i class="bi bi-trash small-icons"></i></button>';
-        }
+        ///*create a button group*/
+        //function createButtonGroup(subjectAllocationID,fnName) {
+        //    return '<button type="button" class="btn btn-sm btn-primary" onclick="edit' + fnName +'(\'' + subjectAllocationID + '\')"><i class="bi bi-pen small-icons"></i></button> ' +
+        //        '<button type="button" class="btn btn-sm btn-danger" onclick="delete' + fnName +'(\'' + subjectAllocationID + '\')"><i class="bi bi-trash small-icons"></i></button>';
+        //}
 
 
 
@@ -307,16 +320,19 @@
                 url: '/Allocation/AllStudentAllocation',
                 type: 'GET',
                 success: function (data) {
+                    $('#studentAllocationTableBody').html(data);
+                    /*console.log(data);*/
                     activeSubjectTeacher();
-                    $('#studentAllocationTableBody').empty();
 
-                    // Group data by student name
-                    var groupedData = groupByStudent(data.data);
+                    //$('#studentAllocationTableBody').empty();
 
-                    $.each(groupedData, function (studentName, items) {
-                        var studentRow = createStudentRow(studentName, items);
-                        $('#studentAllocationTableBody').append(studentRow);
-                    });
+                    //// Group data by student name
+                    //var groupedData = groupByStudent(data.data);
+
+                    //$.each(groupedData, function (studentName, items) {
+                    //    var studentRow = createStudentRow(studentName, items);
+                    //    $('#studentAllocationTableBody').append(studentRow);
+                    //});
                 },
                 error: function (error) {
                     console.log(error);
@@ -325,33 +341,33 @@
             });
         }
 
-        function groupByStudent(data) {
-            var groupedData = {};
-            $.each(data, function (index, item) {
-                if (!groupedData[item.StudentName]) {
-                    groupedData[item.StudentName] = [];
-                }
-                groupedData[item.StudentName].push(item);
-            });
-            return groupedData;
-        }
+        //function groupByStudent(data) {
+        //    var groupedData = {};
+        //    $.each(data, function (index, item) {
+        //        if (!groupedData[item.StudentName]) {
+        //            groupedData[item.StudentName] = [];
+        //        }
+        //        groupedData[item.StudentName].push(item);
+        //    });
+        //    return groupedData;
+        //}
 
-        function createStudentRow(studentName, items) {
-            var rows = '';
-            $.each(items, function (index, item) {
-                var buttonGroup = createButtonGroup(item.studentAllocationID, "StudentAllocation");
-                var subjectInfo = '<strong>' + item.SubjectName + '</strong> (Subject Code- ' + item.subjectCode + ')';
-                var teacherInfo = '<strong>' + item.TeacherName + '</strong> (Reg No- ' + item.teacherRegNo + ')';
-                var row = '<tr>' +
-                    (index === 0 ? '<td rowspan="' + items.length + '">' + '<strong>' + studentName + '</strong> (Reg No- ' + item.studentRegNo + ')</td>' : '') +
-                    '<td>' + teacherInfo + '</td>' +
-                    '<td>' + subjectInfo + '</td>' +
-                    '<td>' + buttonGroup + '</td>' +
-                    '</tr>';
-                rows += row;
-            });
-            return rows;
-        }
+        //function createStudentRow(studentName, items) {
+        //    var rows = '';
+        //    $.each(items, function (index, item) {
+        //        var buttonGroup = createButtonGroup(item.studentAllocationID, "StudentAllocation");
+        //        var subjectInfo = '<strong>' + item.SubjectName + '</strong> (Subject Code- ' + item.subjectCode + ')';
+        //        var teacherInfo = '<strong>' + item.TeacherName + '</strong> (Reg No- ' + item.teacherRegNo + ')';
+        //        var row = '<tr>' +
+        //            (index === 0 ? '<td rowspan="' + items.length + '">' + '<strong>' + studentName + '</strong> (Reg No- ' + item.studentRegNo + ')</td>' : '') +
+        //            '<td>' + teacherInfo + '</td>' +
+        //            '<td>' + subjectInfo + '</td>' +
+        //            '<td>' + buttonGroup + '</td>' +
+        //            '</tr>';
+        //        rows += row;
+        //    });
+        //    return rows;
+        //}
 
         
         

@@ -41,12 +41,6 @@ namespace SMS.Controllers
                .Select(s => new { StudentID = s.StudentID, DisplayName = s.StudentRegNo + " - " + s.DisplayName })
               .ToList();
 
-            //var allocatedSubjects = _allocationBL.GetAllSubjectAllocation().ToList();
-
-            //ViewBag.AllocatedSubjects = allocatedSubjects.Select(a => new { SubjectID = a.SubjectID, Name = a.Subject.SubjectCode + " - " + a.Subject.Name }).Distinct().ToList();
-
-
-
         }
 
         // GET: Allocation
@@ -62,19 +56,13 @@ namespace SMS.Controllers
         /// All Subject Allocations
         /// </summary>
         /// <returns></returns>
-        public ActionResult AllSubjectAllocation()
+        public ActionResult AllSubjectAllocation() 
         {
-           var allAllocatedSubject=_allocationBL.GetAllSubjectAllocation();
+            var allocatedSubject = new AllocationViewModel();
 
-            if (allAllocatedSubject!=null)
-            {
-                return Json(new { success = true, data = allAllocatedSubject }, JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                return Json(new { success = false, message = "No Data Found" }, JsonRequestBehavior.AllowGet);
-            }
+            allocatedSubject.SubjectAllocationList = _allocationBL.GetAllSubjectAllocation();
 
+            return PartialView("_AllocatedSubjects", allocatedSubject.SubjectAllocationList);
         }
 
 
@@ -157,17 +145,24 @@ namespace SMS.Controllers
         /// <returns></returns>
         public ActionResult AllStudentAllocation()
         {
-            var allStudentAllocations=_allocationBL.GetAllStudentAllocation().ToList();
-            
-            if (allStudentAllocations != null)
-            {
-                
-                return Json(new { success = true, data = allStudentAllocations }, JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                return Json(new { success = false, message = "No Data Found" }, JsonRequestBehavior.AllowGet);
-            }
+            var allStudentAllocations = new AllocationViewModel();
+
+
+            allStudentAllocations.StudentAllocationList = _allocationBL.GetAllStudentAllocation();
+
+            return PartialView("_AllocatedStudents", allStudentAllocations.StudentAllocationList);
+
+            //var allStudentAllocations = _allocationBL.GetAllStudentAllocation();
+
+            //if (allStudentAllocations != null)
+            //{
+
+            //    return Json(new { success = true, data = allStudentAllocations }, JsonRequestBehavior.AllowGet);
+            //}
+            //else
+            //{
+            //    return Json(new { success = false, message = "No Data Found" }, JsonRequestBehavior.AllowGet);
+            //}
         }
 
 
@@ -267,12 +262,25 @@ namespace SMS.Controllers
             return Json(teachers, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Get allocation id by passing the subjectid and teacher id
+        /// </summary>
+        /// <param name="subjectId"></param>
+        /// <param name="teacherId"></param>
+        /// <returns></returns>
         [HttpGet]
         public JsonResult GetAllocationID(long subjectId,long teacherId)
         {
             var allocationID = _allocationBL.GetSubjectAllocationID(subjectId,teacherId);
             return Json(allocationID, JsonRequestBehavior.AllowGet);
         }
+
+        //[HttpGet]
+        //public JsonResult GetTeacherAndSubject(long allocationID)
+        //{
+        //    var result = _allocationBL.GetTeacherAndSubject(allocationID);
+        //    return Json(result, JsonRequestBehavior.AllowGet);
+        //}
 
     }
 }

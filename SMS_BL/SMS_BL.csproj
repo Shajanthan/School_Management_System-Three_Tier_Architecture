@@ -71,6 +71,10 @@
       <Project>{ad95e623-7090-444c-8b9c-63d8d0185b12}</Project>
       <Name>SMS_Models</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SMS_ViewModels\SMS_ViewModels.csproj">
+      <Project>{3F417CDD-12F0-414F-BC59-75B38AC0100F}</Project>
+      <Name>SMS_ViewModels</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

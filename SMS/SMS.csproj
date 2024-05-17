@@ -202,6 +202,8 @@
     <Content Include="Views\Allocation\Index.cshtml" />
     <Content Include="Views\Allocation\_AddStudentAllocation.cshtml" />
     <Content Include="Views\Allocation\_AddTeacherSubjectAllocation.cshtml" />
+    <Content Include="Views\Allocation\_AllocatedSubjects.cshtml" />
+    <Content Include="Views\Allocation\_AllocatedStudents.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

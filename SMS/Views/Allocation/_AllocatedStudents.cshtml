@@ -1,0 +1,64 @@
+﻿@model IEnumerable<SMS_ViewModels.Allocation.StudentSubjectAllocationGroupByStudentViewModel>
+@if (Model != null && Model.Any())
+{
+
+    foreach (var student in Model)
+    {
+        <tr>
+            <td class="align-middle">
+                <p>
+                    <strong>@student.StudentName</strong> (Reg No - @student.StudentRegNo)
+                </p>
+            </td>
+            <td colspan="3">
+                <table class="table table-bordered border-2 subTable ">
+                    <thead>
+                        <tr class="sub-table">
+                            <th>Teacher</th>
+                            <th>Subjects</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    @foreach (var teacher in student.TeacherAllocation)
+                    {
+                        <tbody>
+                            <tr>
+                                <td class="align-middle">
+                                    <p><strong>@teacher.TeacherName</strong> (Reg No - @teacher.TeacherRegNo)</p>
+                                </td>
+                                <td class="align-middle">
+                                    @foreach (var subject in teacher.SubjectAllocations)
+                                    {
+                                        <p>
+                                            <strong>@subject.SubjectName</strong> (Subject Code - @subject.SubjectCode)
+                                        </p>
+                                    }
+                                </td>
+                                <td class="align-middle">
+                                    @foreach (var subject in teacher.SubjectAllocations)
+                                    {
+                                        <p>
+                                            <button type="button" class="btn btn-sm btn-primary" onclick="editStudentAllocation(@subject.StudentAllocationID)">
+                                                <i class="bi bi-pen"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-danger" onclick="deleteStudentAllocation(@subject.StudentAllocationID)">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </p>
+
+                                    }
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    }
+                </table>
+                </td>
+        </tr>
+    }
+
+}
+else
+{
+    <p>No student subject allocations available.</p>
+}

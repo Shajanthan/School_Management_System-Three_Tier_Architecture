@@ -24,5 +24,9 @@ namespace SMS_Models.Allocation
         [DisplayName("Registration Number")]
         public long SubjectID { get; set; }
 
+
+       
+
+
     }
 }

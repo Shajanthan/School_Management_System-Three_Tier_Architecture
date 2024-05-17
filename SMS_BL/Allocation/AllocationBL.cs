@@ -4,6 +4,7 @@ using SMS_Data;
 using SMS_Models.Allocation;
 using SMS_Models.Student;
 using SMS_Models.Subject;
+using SMS_ViewModels.Allocation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,30 +18,72 @@ namespace SMS_BL.Allocation
 
         //-------------------------------------------------------Subject Allocation--------------------------------------------------------------------
 
+        ///// <summary>
+        ///// Get All Subject Allocation
+        ///// </summary>
+        ///// <returns></returns>
+        //public IEnumerable<object> GetAllSubjectAllocation()
+        //{
+        //    var allSubjectAllocations = Teacher_Subject_Allocation.Include("Subject").Include("Teacher").ToList();
+
+
+        //    if (allSubjectAllocations.Count > 0)
+        //    {
+        //        var data = allSubjectAllocations.Select(item => new
+        //        {
+        //            SubjectAllocationID = item.SubjectAllocationID,
+        //            SubjectCode = item.Subject.SubjectCode,
+        //            SubjectName = item.Subject.Name,
+        //            TeacherRegNo = item.Teacher.TeacherRegNo,
+        //            TeacherName = item.Teacher.DisplayName
+        //        });
+
+        //        return data;
+        //    }
+        //    return null;
+        //}
+
         /// <summary>
-        /// Get All Subject Allocation
+        /// Get AllSubjectAllocation
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<object> GetAllSubjectAllocation()
+        public IEnumerable<SubjectAllocationGroupByTeacherViewModel> GetAllSubjectAllocation()
         {
             var allSubjectAllocations = Teacher_Subject_Allocation.Include("Subject").Include("Teacher").ToList();
 
 
             if (allSubjectAllocations.Count > 0)
             {
-                var data = allSubjectAllocations.Select(item => new
+                var result = allSubjectAllocations.Select(item => new
                 {
                     SubjectAllocationID = item.SubjectAllocationID,
                     SubjectCode = item.Subject.SubjectCode,
                     SubjectName = item.Subject.Name,
                     TeacherRegNo = item.Teacher.TeacherRegNo,
                     TeacherName = item.Teacher.DisplayName
+                    
+
+                }).GroupBy(x=>new { x.TeacherName,x.TeacherRegNo }).ToList();
+
+                var data = result.Select(a => new SubjectAllocationGroupByTeacherViewModel
+                {
+                    TeacherName = a.Key.TeacherName,
+                    TeacherRegNo = a.Key.TeacherRegNo,
+
+                    SubjectAllocations = a.Select(b => new SubjectAllocationViewModel
+                    {
+                        SubjectAllocationID = b.SubjectAllocationID,
+                        SubjectCode = b.SubjectCode,
+                        SubjectName = b.SubjectName
+                    }).ToList()
+
                 });
 
                 return data;
             }
             return null;
         }
+
 
         /// <summary>
         /// Get allocation by id
@@ -189,29 +232,55 @@ namespace SMS_BL.Allocation
         /// Get all Student allocations
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<object> GetAllStudentAllocation()
+        public IEnumerable<StudentSubjectAllocationGroupByStudentViewModel> GetAllStudentAllocation()
         {
-            var allSubjectAllocations = Student_Subject_Teacher_Allocation.Include("Teacher_Subject_Allocation.Subject")
+
+            var allStudentAllocations = Student_Subject_Teacher_Allocation.Include("Teacher_Subject_Allocation.Subject")
                 .Include("Teacher_Subject_Allocation.Teacher")
                 .Include("Student").ToList();
 
-            if (allSubjectAllocations.Count > 0)
+
+
+
+            if (allStudentAllocations.Count > 0)
             {
-                var data = allSubjectAllocations.Select(item => new
+                var resultStudent = allStudentAllocations.Select(item => new
                 {
-                    studentAllocationID = item.StudentAllocationID,
+                    StudentAllocationID = item.StudentAllocationID,
                     StudentID = item.StudentID,
                     StudentName = item.Student.DisplayName,
-                    studentRegNo = item.Student.StudentRegNo,
+                    StudentRegNo = item.Student.StudentRegNo,
                     SubjectID = item.Teacher_Subject_Allocation.SubjectID,
-                    subjectCode = item.Teacher_Subject_Allocation.Subject.SubjectCode,
+                    SubjectCode = item.Teacher_Subject_Allocation.Subject.SubjectCode,
                     SubjectName = item.Teacher_Subject_Allocation.Subject.Name,
                     TeacherID = item.Teacher_Subject_Allocation.TeacherID,
-                    teacherRegNo = item.Teacher_Subject_Allocation.Teacher.TeacherRegNo,
+                    TeacherRegNo = item.Teacher_Subject_Allocation.Teacher.TeacherRegNo,
                     TeacherName = item.Teacher_Subject_Allocation.Teacher.DisplayName
+
+                }).GroupBy(x => new { x.StudentName, x.StudentRegNo }).ToList();
+
+
+                var result = resultStudent.Select(s => new StudentSubjectAllocationGroupByStudentViewModel
+                {
+                    StudentName = s.Key.StudentName,
+                    StudentRegNo = s.Key.StudentRegNo,
+                    TeacherAllocation = s.GroupBy(x => new { x.TeacherName, x.TeacherRegNo })
+                    .Select(y => new SubjectAllocationGroupByTeacherViewModel
+                    {
+                        TeacherName = y.Key.TeacherName,
+                        TeacherRegNo = y.Key.TeacherRegNo,
+                        SubjectAllocations = y.Select(subject => new SubjectAllocationViewModel
+                        {
+                            StudentAllocationID = subject.StudentAllocationID,
+                            SubjectCode = subject.SubjectCode,
+                            SubjectName = subject.SubjectName,
+                            TeacherRegNo = subject.TeacherRegNo
+                        })
+                    }).ToList()
                 });
 
-                return data;
+                return result;
+
             }
             return null;
         }
@@ -372,11 +441,25 @@ namespace SMS_BL.Allocation
             return allocationID;
         }
 
-        //public List<long> GetSubjectAndTeacher(long id)
+        /// <summary>
+        /// Get the subject id and the techer id
+        /// </summary>
+        /// <param name="subjectAllocationID"></param>
+        /// <returns></returns>
+        //public dynamic GetTeacherAndSubject(long subjectAllocationID)
         //{
+        //    var result = Teacher_Subject_Allocation
+        //                   .Where(s => s.SubjectAllocationID == subjectAllocationID)
+        //                   .Select(s => new { s.TeacherID, s.SubjectID })
+        //                   .FirstOrDefault();
 
-        //    var
+        //    var teacherName=Teachers.Where(s=>s.TeacherID==result.TeacherID).Select(s=>new { s.DisplayName}).FirstOrDefault().ToString();
+        //    var subjectName = Subjects.Where(s => s.SubjectID == result.SubjectID).Select(s => new { s.Name }).FirstOrDefault().ToString();
+
+        //    return (result.SubjectID, subjectName, result.TeacherID, teacherName);
         //}
-       
+     
+
+
     }
 }
