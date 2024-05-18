@@ -275,12 +275,7 @@ namespace SMS.Controllers
             return Json(allocationID, JsonRequestBehavior.AllowGet);
         }
 
-        //[HttpGet]
-        //public JsonResult GetTeacherAndSubject(long allocationID)
-        //{
-        //    var result = _allocationBL.GetTeacherAndSubject(allocationID);
-        //    return Json(result, JsonRequestBehavior.AllowGet);
-        //}
+       
 
     }
 }

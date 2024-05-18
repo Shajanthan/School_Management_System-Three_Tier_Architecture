@@ -255,7 +255,8 @@ namespace SMS_BL.Allocation
                     SubjectName = item.Teacher_Subject_Allocation.Subject.Name,
                     TeacherID = item.Teacher_Subject_Allocation.TeacherID,
                     TeacherRegNo = item.Teacher_Subject_Allocation.Teacher.TeacherRegNo,
-                    TeacherName = item.Teacher_Subject_Allocation.Teacher.DisplayName
+                    TeacherName = item.Teacher_Subject_Allocation.Teacher.DisplayName,
+                    IsStudentEnable=item.Student.IsEnable
 
                 }).GroupBy(x => new { x.StudentName, x.StudentRegNo }).ToList();
 
@@ -422,7 +423,7 @@ namespace SMS_BL.Allocation
         /// <param name="id"></param>
         /// <returns></returns>
         public IEnumerable<object> GetTeachersBySubject(long id) {
-            var teachers = Teacher_Subject_Allocation.Where(t => t.SubjectID == id).Select(t => new {Value = t.TeacherID,Text = t.Teacher.DisplayName}).ToList();
+            var teachers = Teacher_Subject_Allocation.Where(t => t.SubjectID == id).Select(t => new {Value = t.SubjectAllocationID,Text = t.Teacher.DisplayName}).ToList();
             return teachers;
         }
 
@@ -441,23 +442,7 @@ namespace SMS_BL.Allocation
             return allocationID;
         }
 
-        /// <summary>
-        /// Get the subject id and the techer id
-        /// </summary>
-        /// <param name="subjectAllocationID"></param>
-        /// <returns></returns>
-        //public dynamic GetTeacherAndSubject(long subjectAllocationID)
-        //{
-        //    var result = Teacher_Subject_Allocation
-        //                   .Where(s => s.SubjectAllocationID == subjectAllocationID)
-        //                   .Select(s => new { s.TeacherID, s.SubjectID })
-        //                   .FirstOrDefault();
-
-        //    var teacherName=Teachers.Where(s=>s.TeacherID==result.TeacherID).Select(s=>new { s.DisplayName}).FirstOrDefault().ToString();
-        //    var subjectName = Subjects.Where(s => s.SubjectID == result.SubjectID).Select(s => new { s.Name }).FirstOrDefault().ToString();
-
-        //    return (result.SubjectID, subjectName, result.TeacherID, teacherName);
-        //}
+       
      
 
 

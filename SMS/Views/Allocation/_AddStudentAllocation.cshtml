@@ -111,21 +111,8 @@
 
         $('#teacherDropdown').change(function () {
             var teacherID = $(this).val();
-            var subjectID = $('#subjectDropdown').val();
-
-            if (subjectID && teacherID) {
-                $.ajax({
-                    url: '/Allocation/GetAllocationID',
-                    type: 'GET',
-                    data: { subjectID: subjectID, teacherID: teacherID },
-                    success: function (data) {
-                        $('#subAlloID').val(data);
-                    },
-                    error: function (xhr, status, error) {
-                        console.error(error);
-                    }
-                });
-            }
+            $('#subAlloID').val(teacherID);
+           
         });
     </script>
 
