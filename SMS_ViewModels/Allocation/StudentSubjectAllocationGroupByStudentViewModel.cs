@@ -9,6 +9,11 @@ namespace SMS_ViewModels.Allocation
 {
     public class StudentSubjectAllocationGroupByStudentViewModel
     {
+        [DisplayName("Status")]
+        public bool IsStudentEnable { get; set; }
+
+        public long StudentID { get; set; }
+
         [DisplayName("Student Name")]
         public string StudentName{ get; set; }
 

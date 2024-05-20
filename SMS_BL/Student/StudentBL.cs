@@ -107,6 +107,10 @@ namespace SMS_BL.Student
 
                     }
 
+                    var studentAllocation = Student_Subject_Teacher_Allocation.Where(s => s.StudentID == id).ToList();
+
+                    Student_Subject_Teacher_Allocation.RemoveRange(studentAllocation);
+                    SaveChanges();
                     Students.Remove(student);
                     SaveChanges();
                     return true;
@@ -203,14 +207,14 @@ namespace SMS_BL.Student
             }
             if (!isEnable)
             {
-                if (IsStudentAllocated(id))
-                {
-                    var allocationsToRemove = Student_Subject_Teacher_Allocation.Where(a => a.StudentID == id).ToList();
+                //if (IsStudentAllocated(id))
+                //{
+                //    var allocationsToRemove = Student_Subject_Teacher_Allocation.Where(a => a.StudentID == id).ToList();
 
-                    Student_Subject_Teacher_Allocation.RemoveRange(allocationsToRemove);
+                //    Student_Subject_Teacher_Allocation.RemoveRange(allocationsToRemove);
 
-                    SaveChanges();
-                }
+                //    SaveChanges();
+                //}
 
                 student.IsEnable = false;
                 SaveChanges();
@@ -259,9 +263,6 @@ namespace SMS_BL.Student
                             return false;
 
                         }
-                        var allocationsToRemove = Student_Subject_Teacher_Allocation.Where(a => a.StudentID == student.StudentID).ToList();
-
-                        Student_Subject_Teacher_Allocation.RemoveRange(allocationsToRemove);
 
                         SaveChanges();
                         return UpdateStudentDetails(student, out msg, editStudent);

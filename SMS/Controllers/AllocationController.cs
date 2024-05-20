@@ -135,7 +135,28 @@ namespace SMS.Controllers
                 return Json(new { success = false, message = "Please fill all details.", errors = errors });
             }
         }
+        
+        /// <summary>
+        /// Student Alocation search
+        /// </summary>
+        /// <param name="searchTerm"></param>
+        /// <param name="searchCriteria"></param>
+        /// <returns></returns>
+        public ActionResult SubjectAllocationSearch(string searchTerm, string searchCriteria)
+        {
+            var subjects = _allocationBL.SearchSubjectAllocation(searchTerm, searchCriteria).ToList();
 
+            if (subjects.Count > 0)
+            {
+                //return Json(students, JsonRequestBehavior.AllowGet);
+                return PartialView("_SubjectAllocationSearchTable", subjects);
+            }
+            else
+            {
+                //return Json(students, JsonRequestBehavior.AllowGet);
+                return PartialView("_SubjectAllocationSearchTable", null);
+            }
+        }
 
         //----------------------------------------------------------STUDENTS Allocations---------------------------------------------------------------------
 
@@ -143,12 +164,12 @@ namespace SMS.Controllers
         /// get the all student alloaction 
         /// </summary>
         /// <returns></returns>
-        public ActionResult AllStudentAllocation()
+        public ActionResult AllStudentAllocation(bool? isActive = null)
         {
             var allStudentAllocations = new AllocationViewModel();
 
 
-            allStudentAllocations.StudentAllocationList = _allocationBL.GetAllStudentAllocation();
+            allStudentAllocations.StudentAllocationList = _allocationBL.GetAllStudentAllocation(isActive);
 
             return PartialView("_AllocatedStudents", allStudentAllocations.StudentAllocationList);
 
@@ -165,13 +186,38 @@ namespace SMS.Controllers
             //}
         }
 
-
+        /// <summary>
+        /// Delete the specific allocation
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult DeleteStudentAllocation(long id)
         {
             var msg = "";
             try
             {
                 bool deleteStudentAllocation = _allocationBL.DeleteStudentAllocation(id, out msg);
+
+
+                return Json(new { success = deleteStudentAllocation, message = msg });
+            }
+            catch
+            {
+                return Json(new { success = false, message = msg });
+            }
+        }
+
+        /// <summary>
+        /// Delete all the allocation for the student
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult DeleteAllStudentAllocation(long id)
+        {
+            var msg = "";
+            try
+            {
+                bool deleteStudentAllocation = _allocationBL.DeleteAllStudentAllocation(id, out msg);
 
 
                 return Json(new { success = deleteStudentAllocation, message = msg });
@@ -274,8 +320,28 @@ namespace SMS.Controllers
             var allocationID = _allocationBL.GetSubjectAllocationID(subjectId,teacherId);
             return Json(allocationID, JsonRequestBehavior.AllowGet);
         }
+        
+        /// <summary>
+        /// Student Alocation search
+        /// </summary>
+        /// <param name="searchTerm"></param>
+        /// <param name="searchCriteria"></param>
+        /// <returns></returns>
+        public ActionResult StudentAllocationSearch(string searchTerm, string searchCriteria)
+        {
+            var students = _allocationBL.SearchStudentAllocation(searchTerm, searchCriteria).ToList();
 
-       
+            if (students.Count > 0)
+            {
+                //return Json(students, JsonRequestBehavior.AllowGet);
+                return PartialView("_StudentAllocationSearchTable",  students);
+            }
+            else
+            {
+                //return Json(students, JsonRequestBehavior.AllowGet);
+                return PartialView("_StudentAllocationSearchTable", null);
+            }
+        }
 
     }
 }

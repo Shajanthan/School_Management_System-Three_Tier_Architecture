@@ -1,0 +1,41 @@
+﻿@model IEnumerable<SMS_ViewModels.Allocation.SubjectAllocationGroupByTeacherViewModel>
+
+@if (Model != null && Model.Any())
+{
+    foreach (var teacherAllocation in Model)
+    {
+        <tr>
+            <td class="align-middle">
+                <p>
+                    <strong>@teacherAllocation.TeacherName</strong> (Reg No - @teacherAllocation.TeacherRegNo)
+                </p>
+            </td>
+
+            <td>
+                @foreach (var subjectAllocation in teacherAllocation.SubjectAllocations)
+                {
+                    <p>
+                        <strong>@subjectAllocation.SubjectName</strong> (Subject Code- @subjectAllocation.SubjectCode)
+                    </p>
+                }
+            </td>
+            <td>
+                @foreach (var subjectAllocation in teacherAllocation.SubjectAllocations)
+                {
+                    <p>
+                        <button type="button" class="btn btn-sm btn-primary" onclick="editSubjectAllocation(@subjectAllocation.SubjectAllocationID)"><i class="bi bi-pen small-icons"></i></button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="deleteSubjectAllocation(@subjectAllocation.SubjectAllocationID)"><i class="bi bi-trash small-icons"></i></button>
+                    </p>
+                }
+            </td>
+        </tr>
+    }
+
+}
+else
+{
+    <tr>
+        <td colspan="3">No data found</td>
+    </tr>
+}
+

@@ -29,10 +29,28 @@
                 <!--Subject Allocation Div-->
                 <div class="tab-pane show active allocationContent" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
                     <div class="container-fluid m-2 crudLayoud " id="subjectAllocationsHead">
-                        <div class="row justify-content-between align-items-center d-flex flex-wrap">
-                            <!-- add Subject Allocation btn-->
-                            <div class="col-lg-2 col-md-6 mb-2 mb-md-0">
-                                <button id="addNewSubjectAllocation" class="btn">+ Add Subject Allocation</button>
+                        <div class="search_bar2">
+                            <div class="row justify-content-between align-items-center d-flex flex-wrap">
+                                <!-- add Subject Allocation btn-->
+                                <div class="col-lg-2 col-md-6 mb-2 mb-md-0">
+                                    <button id="addNewSubjectAllocation" class="btn">+ Add Subject Allocation</button>
+                                </div>
+
+                                <div class="col-lg-6 col-md-5 d-flex flex-wrap justify-content-between">
+                                    <div>
+
+                                    </div>
+                                    <div class="d-flex">
+                                        <div class="input-group">
+                                            <select class="form-select" id="searchCriteriaSub">
+                                                <option value="" selected>All</option>
+                                                <option value="TeacherName">Teacher Name</option>
+                                                <option value="SubjectName">Subject Name</option>
+                                            </select>
+                                        </div>
+                                        <input type="text" id="searchInputSub" class="form-control" placeholder="Search...">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -61,16 +79,40 @@
                 <div class="tab-pane allocationContent" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
 
                     <div class="container-fluid m-2 crudLayoud " id="studentAllocationsHead">
-                        <div class="row justify-content-between align-items-center d-flex flex-wrap">
-                            <!-- add Students Allocation btn-->
-                            <div class="col-lg-2 col-md-6 mb-2 mb-md-0">
-                                <button id="addNewStudentAllocation" class="btn">+ Add Student Allocation</button>
+                        <div class="search_bar">
+                            <div class="row justify-content-between align-items-center d-flex flex-wrap">
+                                <!-- add Students Allocation btn-->
+                                <div class="col-lg-2 col-md-6 mb-2 mb-md-0">
+                                    <button id="addNewStudentAllocation" class="btn">+ Add Student Allocation</button>
+                                </div>
+                                <div class="col-lg-6 col-md-5 d-flex flex-wrap justify-content-between">
+                                    <div class="d-flex">
+                                        <label for="isActiveFilter" class="col-form-label">Status: </label>
+                                        <select class="form-select flex-grow-1" id="isActiveFilter">
+                                            <option value="">All</option>
+                                            <option value="true">Active</option>
+                                            <option value="false">Inactive</option>
+                                        </select>
+                                    </div>
+                                    <div class="d-flex">
+                                        <div class="input-group">
+                                            <select class="form-select" id="searchCriteria">
+                                                <option value="" selected>All</option>
+                                                <option value="StudentName">Student Name</option>
+                                                <option value="TeacherName">Teacher Name</option>
+                                                <option value="SubjectName">Subject Name</option>
+                                            </select>
+                                        </div>
+                                        <input type="text" id="searchInput" class="form-control" placeholder="Search...">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="table-responsive">
                             <table id="studentAllocationDetails" class="table table-bordered">
                                 <thead class="tableheading text-center">
                                     <tr>
+                                        <th>Status</th>
                                         <th class="sortable">Student</th>
                                         <th>Details</th>
                                     </tr>
@@ -79,12 +121,10 @@
                             </table>
 
                             <div class="container-fluid" style="display:none" id="addStudentAllocationForm">
-                               
+
                             </div>
 
                         </div>
-                        
-
                     </div>
                 </div>
             </div>
@@ -95,413 +135,5 @@
 </div>
 
 @section Scripts{
-    <script>
-        $(document).ready(function () {
-
-            //Add new subject allocation button
-            $('#addNewSubjectAllocation').click(function () {
-                $('#addTeacherSubjectAllocationForm').show();
-                $('#subjectAllocationDetails').hide();
-                $('#addNewSubjectAllocation').hide();
-                $.ajax({
-                    url: '/Allocation/AddTeacherSubjectAllocation',
-                    type: 'GET',
-                    success: function (response) {
-                        $('#addTeacherSubjectAllocationForm').html(response);
-                        activeSubjectTeacher();
-                        $.validator.unobtrusive.parse($('#addTeacherSubjectAllocationForm'));
-                        $('#addTeacherSubjectAllocationForm').show();
-                    }
-                });
-
-
-            });
-
-            //Add new student allocation button
-            $('#addNewStudentAllocation').click(function () {
-                $('#addStudentAllocationForm').show();
-                $('#studentAllocationDetails').hide();
-                $('#addNewStudentAllocation').hide();
-                $.ajax({
-                    url: '/Allocation/AddStudentAllocation',
-                    type: 'GET',
-                    success: function (response) {
-                        $('#addStudentAllocationForm').html(response);
-                        activeSubjectTeacher();
-                        $.validator.unobtrusive.parse($('#addStudentAllocationForm'));
-                        $('#addStudentAllocationForm').show();
-                    }
-                });
-            });
-
-            //Load Data on page load
-            loadSubjectAllocationData();
-            loadStudentAllocationData();
-
-        });               
-
-
-
-         
-        //function loadSubjectAllocationData() {
-        //    $.ajax({
-        //        url: '/Allocation/AllSubjectAllocation',
-        //        type: 'GET',
-        //        success: function (data) {
-        //            $('#subjectAllocationTableBody').empty();
-                    
-        //            var groupedData = groupByTeacher(data.data);
-
-        //            $.each(groupedData, function (teacherName, items) {
-        //               var teacherRow = createTeacherRow(teacherName, items);
-        //                $('#subjectAllocationTableBody').append(teacherRow);
-        //            });
-        //        },
-        //        error: function (error) {
-        //            console.log(error);
-        //            alert('An error occurred while loading data.');
-        //        }
-        //    });
-        //}
-
-        function loadSubjectAllocationData() {
-            $.ajax({
-                url: '/Allocation/AllSubjectAllocation',
-                type: 'GET',
-                success: function (data) {
-                    $('#subjectAllocationTableBody').html(data);
-                   /* console.log(data);*/
-                },
-                error: function (error) {
-                    console.log(error);
-                    alert('An error occurred while loading data.');
-                }
-            });
-        }
-
-        //function groupByTeacher(data) {
-        //    var groupedData = {};
-        //    $.each(data, function (index, item) {
-        //        if (!groupedData[item.TeacherName]) {
-        //            groupedData[item.TeacherName] = [];
-        //        }
-        //        groupedData[item.TeacherName].push(item);
-        //    });
-        //    return groupedData;
-        //}
-
-        //function createTeacherRow(teacherName, items) {
-        //    var rows = '';
-        //    $.each(items, function (index, item) {
-        //        var buttonGroup = createButtonGroup(item.SubjectAllocationID,"SubjectAllocation");
-        //        var subjectInfo = '<strong>' + item.SubjectName + '</strong> (Subject Code- ' + item.SubjectCode+')';
-        //        var row = '<tr>' +
-        //            (index === 0 ? '<td rowspan="' + items.length + '">' + '<strong>' + teacherName + '</strong> (Reg No- ' + item.TeacherRegNo + ')</td>' : '') +
-        //            '<td>' + subjectInfo + '</td>' +
-        //            '<td>' + buttonGroup + '</td>' +
-        //            '</tr>';
-        //        rows += row;
-        //    });
-        //    return rows;
-        //}
-
-        ///*create a button group*/
-        //function createButtonGroup(subjectAllocationID,fnName) {
-        //    return '<button type="button" class="btn btn-sm btn-primary" onclick="edit' + fnName +'(\'' + subjectAllocationID + '\')"><i class="bi bi-pen small-icons"></i></button> ' +
-        //        '<button type="button" class="btn btn-sm btn-danger" onclick="delete' + fnName +'(\'' + subjectAllocationID + '\')"><i class="bi bi-trash small-icons"></i></button>';
-        //}
-
-
-
-        function addTeacherSubjectAllocationSuccess(response) {
-            if (response.success) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: response.message,
-                    showCancelButton: false,
-                    confirmButtonText: 'OK'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        loadSubjectAllocationData();
-                       
-                        
-                        $('#addTeacherSubjectAllocationForm').hide();
-                        $('#addTeacherSubjectAllocationForm').find('select').val('');
-                        $('#subjectAllocationDetails').show();
-                        $('#addNewSubjectAllocation').show();
-                    }
-                });
-            } else {
-                Swal.fire({ icon: 'warning', title: 'Warning', text: response.message });
-            }
-        }
-
-        function addTeacherSubjectAllocationFailure(xhr, status, error) {
-            console.error("Error adding teacher subject allocation:", error);
-            Swal.fire('Error!', 'An error occurred while adding the teacher subject allocation.', 'error');
-        }
-
-
-        function backSubjectAllocation() {
-            $('#addTeacherSubjectAllocationForm').hide();
-            $('#addTeacherSubjectAllocationForm').find('select').val('');
-            $('#subjectAllocationDetails').show();
-            $('#addNewSubjectAllocation').show(); 
-        }
-
-
-        function deleteSubjectAllocation(subjectAllocationID) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: 'Are you sure you want to delete this Allocation ?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: '/Allocation/DeleteSubjectAllocation/' + subjectAllocationID,
-                        type: 'POST',
-                        success: function (response) {
-                            if (response.success) {
-                                $('#subjectAllocationTableBody tr:has(td:contains(' + subjectAllocationID + '))').remove();
-                                loadSubjectAllocationData();
-                                Swal.fire('Deleted!', 'Allocation deleted successfully.', 'success');
-                            } else {
-                                Swal.fire('Delete Prevented!', response.message, 'warning');
-                            }
-                        },
-                        error: function (error) {
-                            console.log(error);
-                            Swal.fire('Error!', 'An error occurred while deleting the Allocation.', 'error');
-                        }
-                    });
-                }
-            });
-        }
-
-        //editSubjectAllocation
-        function editSubjectAllocation(subjectAllocationID) {
-            $.ajax({
-                url: '/Allocation/AddTeacherSubjectAllocation/' + subjectAllocationID,
-                type: 'GET',
-                success: function (data) {
-                    $('#addTeacherSubjectAllocationForm').html(data);
-                    $('#addTeacherSubjectAllocationForm').show();
-                    $.validator.unobtrusive.parse($('#addTeacherSubjectAllocationForm'));
-                    $('#subjectAllocationDetails').hide();
-                    $('#addNewSubjectAllocation').hide();
-                },
-                error: function (error) {
-                    console.log(error);
-                    Swal.fire('Error!', 'An error occurred while fetching student details.', 'error');
-                }
-            });
-        }
-
-
-
-        /*-------------------------------------------------------------------------STUDENT ALLOCATIONS PARTS--------------------------------------------------------------------------------------------*/
-
-        function backStudentAllocation() {
-            $('#addStudentAllocationForm').hide();
-            $('#addStudentAllocationForm').find('select').val('');
-            $('#subjectAllocationID').val('');
-            $('#studentAllocationDetails').show();
-            $('#addNewStudentAllocation').show();
-        }
-
-        //Load Student Allocation
-        function loadStudentAllocationData() {
-            $.ajax({
-                url: '/Allocation/AllStudentAllocation',
-                type: 'GET',
-                success: function (data) {
-                    $('#studentAllocationTableBody').html(data);
-                    /*console.log(data);*/
-                    activeSubjectTeacher();
-
-                    //$('#studentAllocationTableBody').empty();
-
-                    //// Group data by student name
-                    //var groupedData = groupByStudent(data.data);
-
-                    //$.each(groupedData, function (studentName, items) {
-                    //    var studentRow = createStudentRow(studentName, items);
-                    //    $('#studentAllocationTableBody').append(studentRow);
-                    //});
-                },
-                error: function (error) {
-                    console.log(error);
-                    alert('An error occurred while loading data.');
-                }
-            });
-        }
-
-        //function groupByStudent(data) {
-        //    var groupedData = {};
-        //    $.each(data, function (index, item) {
-        //        if (!groupedData[item.StudentName]) {
-        //            groupedData[item.StudentName] = [];
-        //        }
-        //        groupedData[item.StudentName].push(item);
-        //    });
-        //    return groupedData;
-        //}
-
-        //function createStudentRow(studentName, items) {
-        //    var rows = '';
-        //    $.each(items, function (index, item) {
-        //        var buttonGroup = createButtonGroup(item.studentAllocationID, "StudentAllocation");
-        //        var subjectInfo = '<strong>' + item.SubjectName + '</strong> (Subject Code- ' + item.subjectCode + ')';
-        //        var teacherInfo = '<strong>' + item.TeacherName + '</strong> (Reg No- ' + item.teacherRegNo + ')';
-        //        var row = '<tr>' +
-        //            (index === 0 ? '<td rowspan="' + items.length + '">' + '<strong>' + studentName + '</strong> (Reg No- ' + item.studentRegNo + ')</td>' : '') +
-        //            '<td>' + teacherInfo + '</td>' +
-        //            '<td>' + subjectInfo + '</td>' +
-        //            '<td>' + buttonGroup + '</td>' +
-        //            '</tr>';
-        //        rows += row;
-        //    });
-        //    return rows;
-        //}
-
-        
-        
-       //Add Student allocation
-        function addStudentAllocationSuccess(response) {
-            if (response.success) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: response.message,
-                    showCancelButton: false,
-                    confirmButtonText: 'OK'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        loadStudentAllocationData();
-                        $('#addStudentAllocationForm').hide();
-                        $('#subjectAllocationID').val('');
-                        $('#addStudentAllocationForm').find('select').val('');
-                        $('#studentAllocationDetails').show();
-                        $('#addNewStudentAllocation').show();
-                    }
-                });
-            } else {
-                Swal.fire({ icon: 'warning', title: 'Warning', text: response.message, error:response.error });
-            }
-        }
-
-        function addStudentAllocationFailure(xhr, status, error) {
-            console.error("Error adding teacher subject allocation:", error);
-            Swal.fire('Error!', 'An error occurred while adding the teacher subject allocation.', 'error');
-        }
-
-
-        function deleteStudentAllocation(studentAllocationID) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: 'Are you sure you want to delete this Student Allocation ?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: '/Allocation/DeleteStudentAllocation/' + studentAllocationID,
-                        type: 'POST',
-                        success: function (response) {
-                            if (response.success) {
-                                $('#studentAllocationTableBody tr:has(td:contains(' + studentAllocationID + '))').remove();
-                                loadStudentAllocationData();
-                                Swal.fire('Deleted!', 'Student Allocation deleted successfully.', 'success');
-                            }
-                        },
-                        error: function (error) {
-                            console.log(error);
-                            Swal.fire('Error!', 'An error occurred while deleting the Allocation.', 'error');
-                        }
-                    });
-                }
-            });
-        }
-
-        
-        //editSubjectAllocation
-        function editStudentAllocation(studentAllocationID) {
-            $.ajax({
-                url: '/Allocation/AddStudentAllocation/' + studentAllocationID,
-                type: 'GET',
-                success: function (data) {
-                    $('#addStudentAllocationForm').html(data);
-                    $('#addStudentAllocationForm').show();
-                    $.ajax({
-                        url: '/Allocation/GetAllocatedSubject',
-                        type: 'GET',
-                        success: function (response) {
-                            if (response.success) {
-                                $.each(response.data, function (index, item) {
-                                    $('#subjectDropdown').append($('<option>', {
-                                        value: item.SubjectID,
-                                        text: item.Name
-                                    }));
-                                });
-                            } else {
-                                console.log('No data found.');
-                            }
-                        },
-                        error: function () {
-                            console.log('Error fetching allocated subjects.');
-                        }
-                    });
-                    $.validator.unobtrusive.parse($('#addStudentAllocationForm'));
-                    $('#studentAllocationDetails').hide();
-                    $('#addNewStudentAllocation').hide();
-                },
-                error: function (error) {
-                    console.log(error);
-                    Swal.fire('Error!', 'An error occurred while fetching student allocation details.', 'error');
-                }
-            });
-        }
-
-       
-        //Available subject and teacher
-        function activeSubjectTeacher() {
-            $.ajax({
-                url: '/Allocation/GetAllocatedSubject',
-                type: 'GET',
-                success: function (response) {
-                    $('#subjectDropdown').empty().append($('<option>', {
-                        value: '',
-                        text: '-Select Subject-'
-                    }));
-                    $('#teacherDropdown').empty().append($('<option>', {
-                        value: '',
-                        text: '-Select Teacher-'
-                    }));
-
-                    if (response.success) {
-                        $.each(response.data, function (index, item) {
-                            $('#subjectDropdown').append($('<option>', {
-                                value: item.SubjectID,
-                                text: item.Name
-                            }));
-                        });
-                    } else {
-                        console.log('No data found.');
-                    }
-                },
-                error: function () {
-                    console.log('Error fetching allocated subjects.');
-                }
-            });
-        }
-
-    </script>
+    <script src="~/SMS_Scripts/Allocation/Allocation.js"></script>
 }
