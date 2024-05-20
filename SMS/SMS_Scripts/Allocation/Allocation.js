@@ -227,6 +227,7 @@ function editSubjectAllocation(subjectAllocationID) {
             $.validator.unobtrusive.parse($('#addTeacherSubjectAllocationForm'));
             $('#subjectAllocationDetails').hide();
             $('#addNewSubjectAllocation').hide();
+            $('.search_bar2').hide();
         },
         error: function (error) {
             console.log(error);
