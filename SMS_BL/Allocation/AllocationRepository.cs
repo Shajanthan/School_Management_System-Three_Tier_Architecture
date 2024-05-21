@@ -1,9 +1,6 @@
-﻿using SMS_BL.Student;
-using SMS_BL.Subject;
+﻿using SMS_BL.Allocation.Interface;
 using SMS_Data;
 using SMS_Models.Allocation;
-using SMS_Models.Student;
-using SMS_Models.Subject;
 using SMS_ViewModels.Allocation;
 using System;
 using System.Collections.Generic;
@@ -13,35 +10,16 @@ using System.Threading.Tasks;
 
 namespace SMS_BL.Allocation
 {
-    public class AllocationBL : SMS_DBEntities
+    public class AllocationRepository:IAllocationRepository
     {
-
         //-------------------------------------------------------Subject Allocation--------------------------------------------------------------------
 
-        ///// <summary>
-        ///// Get All Subject Allocation
-        ///// </summary>
-        ///// <returns></returns>
-        //public IEnumerable<object> GetAllSubjectAllocation()
-        //{
-        //    var allSubjectAllocations = Teacher_Subject_Allocation.Include("Subject").Include("Teacher").ToList();
+        private readonly SMS_DBEntities _dbEntities;
 
-
-        //    if (allSubjectAllocations.Count > 0)
-        //    {
-        //        var data = allSubjectAllocations.Select(item => new
-        //        {
-        //            SubjectAllocationID = item.SubjectAllocationID,
-        //            SubjectCode = item.Subject.SubjectCode,
-        //            SubjectName = item.Subject.Name,
-        //            TeacherRegNo = item.Teacher.TeacherRegNo,
-        //            TeacherName = item.Teacher.DisplayName
-        //        });
-
-        //        return data;
-        //    }
-        //    return null;
-        //}
+        public AllocationRepository(SMS_DBEntities dbEntities)
+        {
+            _dbEntities = dbEntities;
+        }
 
         /// <summary>
         /// Get AllSubjectAllocation
@@ -49,7 +27,7 @@ namespace SMS_BL.Allocation
         /// <returns></returns>
         public IEnumerable<SubjectAllocationGroupByTeacherViewModel> GetAllSubjectAllocation()
         {
-            var allSubjectAllocations = Teacher_Subject_Allocation.Include("Subject").Include("Teacher").ToList();
+            var allSubjectAllocations = _dbEntities.Teacher_Subject_Allocation.Include("Subject").Include("Teacher").ToList();
 
 
             if (allSubjectAllocations.Count > 0)
@@ -61,9 +39,9 @@ namespace SMS_BL.Allocation
                     SubjectName = item.Subject.Name,
                     TeacherRegNo = item.Teacher.TeacherRegNo,
                     TeacherName = item.Teacher.DisplayName
-                    
 
-                }).GroupBy(x=>new { x.TeacherName,x.TeacherRegNo }).ToList();
+
+                }).GroupBy(x => new { x.TeacherName, x.TeacherRegNo }).ToList();
 
                 var data = result.Select(a => new SubjectAllocationGroupByTeacherViewModel
                 {
@@ -90,9 +68,10 @@ namespace SMS_BL.Allocation
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public SubjectAllocationBO GetSubjectAllocationByID(long id) {
+        public SubjectAllocationBO GetSubjectAllocationByID(long id)
+        {
 
-            var student = Teacher_Subject_Allocation.Select(s => new SubjectAllocationBO()
+            var student = _dbEntities.Teacher_Subject_Allocation.Select(s => new SubjectAllocationBO()
             {
                 SubjectAllocationID = s.SubjectAllocationID,
                 SubjectID = s.SubjectID,
@@ -112,7 +91,7 @@ namespace SMS_BL.Allocation
 
             msg = "";
 
-            var subjectAllocation = Teacher_Subject_Allocation.SingleOrDefault(s => s.SubjectAllocationID == id);
+            var subjectAllocation = _dbEntities.Teacher_Subject_Allocation.SingleOrDefault(s => s.SubjectAllocationID == id);
 
             try
             {
@@ -127,8 +106,8 @@ namespace SMS_BL.Allocation
                         return false;
                     }
 
-                    Teacher_Subject_Allocation.Remove(subjectAllocation);
-                    SaveChanges();
+                    _dbEntities.Teacher_Subject_Allocation.Remove(subjectAllocation);
+                    _dbEntities.SaveChanges();
                     return true;
 
 
@@ -149,9 +128,10 @@ namespace SMS_BL.Allocation
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public bool IsSubjectAllocated(long id) {
+        public bool IsSubjectAllocated(long id)
+        {
 
-            bool isSubjectAllocated = Student_Subject_Teacher_Allocation.Any(s => s.SubjectAllocationID == id);
+            bool isSubjectAllocated = _dbEntities.Student_Subject_Teacher_Allocation.Any(s => s.SubjectAllocationID == id);
             return isSubjectAllocated;
         }
 
@@ -166,13 +146,13 @@ namespace SMS_BL.Allocation
         {
             msg = "";
 
-            bool isExistingSubjectAllocation = Teacher_Subject_Allocation.Any(s => s.SubjectAllocationID == subjectAllocation.SubjectAllocationID);
+            bool isExistingSubjectAllocation = _dbEntities.Teacher_Subject_Allocation.Any(s => s.SubjectAllocationID == subjectAllocation.SubjectAllocationID);
 
-            var editSubjectAllocation = Teacher_Subject_Allocation.SingleOrDefault(s => s.SubjectAllocationID == subjectAllocation.SubjectAllocationID);
+            var editSubjectAllocation = _dbEntities.Teacher_Subject_Allocation.SingleOrDefault(s => s.SubjectAllocationID == subjectAllocation.SubjectAllocationID);
 
             bool isStudentChoose = IsSubjectAllocated(subjectAllocation.SubjectAllocationID);
 
-            bool isAllocated = Teacher_Subject_Allocation.Any(a => a.TeacherID == subjectAllocation.TeacherID && a.SubjectID == subjectAllocation.SubjectID);
+            bool isAllocated = _dbEntities.Teacher_Subject_Allocation.Any(a => a.TeacherID == subjectAllocation.TeacherID && a.SubjectID == subjectAllocation.SubjectID);
 
             try
             {
@@ -200,7 +180,7 @@ namespace SMS_BL.Allocation
 
                     editSubjectAllocation.SubjectID = subjectAllocation.SubjectID;
 
-                    SaveChanges();
+                    _dbEntities.SaveChanges();
                     msg = "Allocation Details Updated Successfully!";
                     return true;
 
@@ -212,8 +192,8 @@ namespace SMS_BL.Allocation
 
 
 
-                Teacher_Subject_Allocation.Add(newSubjectAllocation);
-                SaveChanges();
+                _dbEntities.Teacher_Subject_Allocation.Add(newSubjectAllocation);
+                _dbEntities.SaveChanges();
                 msg = "Subject Allocation Added Successfully!";
                 return true;
             }
@@ -234,7 +214,7 @@ namespace SMS_BL.Allocation
         public IEnumerable<SubjectAllocationGroupByTeacherViewModel> SearchSubjectAllocation(string term, string category)
         {
             var allSubjects = GetAllSubjectAllocation();
-           
+
             if (category == "TeacherName")
             {
                 allSubjects = allSubjects.Where(s => s.TeacherName.ToUpper().Contains(term.ToUpper())).ToList();
@@ -262,7 +242,7 @@ namespace SMS_BL.Allocation
         public IEnumerable<StudentSubjectAllocationGroupByStudentViewModel> GetAllStudentAllocation(bool? isActive = null)
         {
 
-            var allStudentAllocations = Student_Subject_Teacher_Allocation.Include("Teacher_Subject_Allocation.Subject")
+            var allStudentAllocations = _dbEntities.Student_Subject_Teacher_Allocation.Include("Teacher_Subject_Allocation.Subject")
                 .Include("Teacher_Subject_Allocation.Teacher")
                 .Include("Student").ToList();
 
@@ -283,17 +263,17 @@ namespace SMS_BL.Allocation
                     TeacherID = item.Teacher_Subject_Allocation.TeacherID,
                     TeacherRegNo = item.Teacher_Subject_Allocation.Teacher.TeacherRegNo,
                     TeacherName = item.Teacher_Subject_Allocation.Teacher.DisplayName,
-                    IsStudentEnable=item.Student.IsEnable
+                    IsStudentEnable = item.Student.IsEnable
 
-                }).GroupBy(x => new { x.StudentName, x.StudentRegNo,x.StudentID,x.IsStudentEnable }).ToList();
+                }).GroupBy(x => new { x.StudentName, x.StudentRegNo, x.StudentID, x.IsStudentEnable }).ToList();
 
 
                 var result = resultStudent.Select(s => new StudentSubjectAllocationGroupByStudentViewModel
                 {
                     StudentName = s.Key.StudentName,
-                    StudentRegNo = s.Key.StudentRegNo,        
+                    StudentRegNo = s.Key.StudentRegNo,
                     StudentID = s.Key.StudentID,
-                    IsStudentEnable=s.Key.IsStudentEnable,
+                    IsStudentEnable = s.Key.IsStudentEnable,
                     TeacherAllocation = s.GroupBy(x => new { x.TeacherName, x.TeacherRegNo })
                     .Select(y => new SubjectAllocationGroupByTeacherViewModel
                     {
@@ -328,7 +308,7 @@ namespace SMS_BL.Allocation
         public StudentAllocationBO GetStudenttAllocationByID(long id)
         {
 
-            var student = Student_Subject_Teacher_Allocation.Select(s => new StudentAllocationBO()
+            var student = _dbEntities.Student_Subject_Teacher_Allocation.Select(s => new StudentAllocationBO()
             {
                 SubjectAllocationID = s.SubjectAllocationID,
                 StudentAllocationID = s.StudentAllocationID,
@@ -349,15 +329,15 @@ namespace SMS_BL.Allocation
 
             msg = "";
 
-            var studentAllocation = Student_Subject_Teacher_Allocation.SingleOrDefault(s => s.StudentAllocationID == id);
+            var studentAllocation = _dbEntities.Student_Subject_Teacher_Allocation.SingleOrDefault(s => s.StudentAllocationID == id);
 
             try
             {
 
                 if (studentAllocation != null)
                 {
-                    Student_Subject_Teacher_Allocation.Remove(studentAllocation);
-                    SaveChanges();
+                    _dbEntities.Student_Subject_Teacher_Allocation.Remove(studentAllocation);
+                    _dbEntities.SaveChanges();
                     return true;
 
                 }
@@ -382,15 +362,15 @@ namespace SMS_BL.Allocation
 
             msg = "";
 
-            var studentAllocation = Student_Subject_Teacher_Allocation.Where(s => s.StudentID == id).ToList();
+            var studentAllocation = _dbEntities.Student_Subject_Teacher_Allocation.Where(s => s.StudentID == id).ToList();
 
             try
             {
 
                 if (studentAllocation != null)
                 {
-                    Student_Subject_Teacher_Allocation.RemoveRange(studentAllocation);
-                    SaveChanges();
+                    _dbEntities.Student_Subject_Teacher_Allocation.RemoveRange(studentAllocation);
+                    _dbEntities.SaveChanges();
                     return true;
 
                 }
@@ -416,17 +396,18 @@ namespace SMS_BL.Allocation
         {
             msg = "";
 
-            bool isExistingStudentAllocation = Student_Subject_Teacher_Allocation.Any(s => s.StudentAllocationID == studentAllocation.StudentAllocationID);
+            bool isExistingStudentAllocation = _dbEntities.Student_Subject_Teacher_Allocation.Any(s => s.StudentAllocationID == studentAllocation.StudentAllocationID);
 
-            var editStudenttAllocation = Student_Subject_Teacher_Allocation.SingleOrDefault(s => s.StudentAllocationID == studentAllocation.StudentAllocationID);
+            var editStudenttAllocation = _dbEntities.Student_Subject_Teacher_Allocation.SingleOrDefault(s => s.StudentAllocationID == studentAllocation.StudentAllocationID);
 
-            bool isStudentAllocated = Student_Subject_Teacher_Allocation.Any(s => s.SubjectAllocationID == studentAllocation.SubjectAllocationID && s.StudentID == studentAllocation.StudentID);
+            bool isStudentAllocated = _dbEntities.Student_Subject_Teacher_Allocation.Any(s => s.SubjectAllocationID == studentAllocation.SubjectAllocationID && s.StudentID == studentAllocation.StudentID);
 
-           
+
 
             try
             {
-                if (studentAllocation.SubjectAllocationID == 0 || studentAllocation==null) {
+                if (studentAllocation.SubjectAllocationID == 0 || studentAllocation == null)
+                {
                     msg = "Please Fill All Details";
                     return false;
                 }
@@ -439,7 +420,7 @@ namespace SMS_BL.Allocation
 
                 if (isExistingStudentAllocation)
                 {
-                    
+
 
                     if (editStudenttAllocation == null)
                     {
@@ -449,12 +430,12 @@ namespace SMS_BL.Allocation
 
                     editStudenttAllocation.SubjectAllocationID = studentAllocation.SubjectAllocationID;
 
-                    SaveChanges();
+                    _dbEntities.SaveChanges();
                     msg = "Allocation Details Updated Successfully!";
                     return true;
 
                 }
-                
+
 
                 var newStudentAllocation = new SMS_Data.Student_Subject_Teacher_Allocation();
                 newStudentAllocation.StudentID = studentAllocation.StudentID;
@@ -462,8 +443,8 @@ namespace SMS_BL.Allocation
 
 
 
-                Student_Subject_Teacher_Allocation.Add(newStudentAllocation);
-                SaveChanges();
+                _dbEntities.Student_Subject_Teacher_Allocation.Add(newStudentAllocation);
+                _dbEntities.SaveChanges();
                 msg = "Student Allocation Added Successfully!";
                 return true;
             }
@@ -479,9 +460,10 @@ namespace SMS_BL.Allocation
         /// Get Allocated subject
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<object> GetAllocatedSubjects() { 
-            
-            var allocatedSubject=Teacher_Subject_Allocation.Select(a => new { SubjectID = a.SubjectID, Name = a.Subject.SubjectCode + " - " + a.Subject.Name }).Distinct();
+        public IEnumerable<object> GetAllocatedSubjects()
+        {
+
+            var allocatedSubject = _dbEntities.Teacher_Subject_Allocation.Select(a => new { SubjectID = a.SubjectID, Name = a.Subject.SubjectCode + " - " + a.Subject.Name }).Distinct();
             return allocatedSubject;
         }
 
@@ -490,8 +472,9 @@ namespace SMS_BL.Allocation
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public IEnumerable<object> GetTeachersBySubject(long id) {
-            var teachers = Teacher_Subject_Allocation.Where(t => t.SubjectID == id).Select(t => new {Value = t.SubjectAllocationID,Text = t.Teacher.DisplayName}).ToList();
+        public IEnumerable<object> GetTeachersBySubject(long id)
+        {
+            var teachers = _dbEntities.Teacher_Subject_Allocation.Where(t => t.SubjectID == id).Select(t => new { Value = t.SubjectAllocationID, Text = t.Teacher.TeacherRegNo + " - " + t.Teacher.DisplayName }).ToList();
             return teachers;
         }
 
@@ -501,15 +484,22 @@ namespace SMS_BL.Allocation
         /// <param name="subjectID"></param>
         /// <param name="teacherID"></param>
         /// <returns></returns>
-        public long GetSubjectAllocationID(long subjectID,long teacherID) {
-            var allocationID = Teacher_Subject_Allocation
+        public long GetSubjectAllocationID(long subjectID, long teacherID)
+        {
+            var allocationID = _dbEntities.Teacher_Subject_Allocation
                                 .Where(s => s.SubjectID == subjectID && s.TeacherID == teacherID)
                                 .Select(s => s.SubjectAllocationID)
-                                .FirstOrDefault(); 
+                                .FirstOrDefault();
 
             return allocationID;
         }
 
+        /// <summary>
+        /// Search Student allocation 
+        /// </summary>
+        /// <param name="term"></param>
+        /// <param name="category"></param>
+        /// <returns></returns>
         public IEnumerable<StudentSubjectAllocationGroupByStudentViewModel> SearchStudentAllocation(string term, string category)
         {
             var allStudents = GetAllStudentAllocation();
@@ -533,8 +523,5 @@ namespace SMS_BL.Allocation
 
             return allStudents;
         }
-
-
-
     }
 }

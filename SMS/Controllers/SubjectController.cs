@@ -10,13 +10,22 @@ using System;
 using System.Web.Mvc;
 using System.Collections.Generic;
 using SMS_Models.Subject;
+using SMS_BL.Subject.Interface;
+using SMS_Data;
 
 namespace SMS.Controllers
 {
     public class SubjectController : Controller
     {
 
-        private readonly SubjectBL _subjectBL = new SubjectBL();
+        //private readonly SubjectBL _subjectBL = new SubjectBL();
+
+        private readonly ISubjectRepository _subjectRepository;
+
+        public SubjectController()
+        {
+            _subjectRepository = new SubjectRepository(new SMS_DBEntities());
+        }
 
         // GET: Subject
         public ActionResult Index()
@@ -36,7 +45,9 @@ namespace SMS.Controllers
         {
             var subjectResult = new SubjectViewModel();
 
-            subjectResult.SubjectList = _subjectBL.GetAllSubject(isActive);
+            //subjectResult.SubjectList = _subjectBL.GetAllSubject(isActive);
+
+            subjectResult.SubjectList = _subjectRepository.GetAllSubject(isActive);
 
             List<SubjectBO> pageData;
             int totalPage;
@@ -85,8 +96,9 @@ namespace SMS.Controllers
             var msg = "";
             try
             {
-                bool deleteSubject = _subjectBL.DeleteSubject(id,out msg);
+                //bool deleteSubject = _subjectBL.DeleteSubject(id,out msg);
 
+                bool deleteSubject = _subjectRepository.DeleteSubject(id, out msg);
 
                 return Json(new { success = deleteSubject, msg});
             }
@@ -106,7 +118,8 @@ namespace SMS.Controllers
             if (id == 0) {
                 return PartialView("_AddSubject",new SubjectBO());
             }
-            var subject=_subjectBL.GetSubjetByID(id);
+            //var subject=_subjectBL.GetSubjetByID(id);
+            var subject = _subjectRepository.GetSubjetByID(id);
             return PartialView("_AddSubject", subject);
 
         }
@@ -126,7 +139,8 @@ namespace SMS.Controllers
             {
                 try
                 {
-                    bool isSaveSuccess = _subjectBL.SaveSubject(subject, out msg);
+                    //bool isSaveSuccess = _subjectBL.SaveSubject(subject, out msg);
+                    bool isSaveSuccess = _subjectRepository.SaveSubject(subject, out msg);
 
                     return Json(new { success = isSaveSuccess, message = msg });
                 }
@@ -151,7 +165,8 @@ namespace SMS.Controllers
         /// <returns></returns>
         public JsonResult IsSubCodeAvailable(string subCode)
         {
-            bool isAvailable = _subjectBL.CheckSubCode(subCode);
+            //bool isAvailable = _subjectBL.CheckSubCode(subCode);
+            bool isAvailable = _subjectRepository.CheckSubCode(subCode);
             return Json(isAvailable, JsonRequestBehavior.AllowGet);
         }
 
@@ -163,7 +178,8 @@ namespace SMS.Controllers
         /// <returns></returns>
         public JsonResult IsSubNameAvailable(string subName)
         {
-            bool isAvailable = _subjectBL.CheckSubname(subName);
+            //bool isAvailable = _subjectBL.CheckSubname(subName);
+            bool isAvailable = _subjectRepository.CheckSubname(subName);
             return Json(isAvailable, JsonRequestBehavior.AllowGet);
         }
 
@@ -179,7 +195,8 @@ namespace SMS.Controllers
             var msg = "";
             try
             {
-                bool isToggle = _subjectBL.ToggleSubject(id, enable, out msg);
+                //bool isToggle = _subjectBL.ToggleSubject(id, enable, out msg);
+                bool isToggle = _subjectRepository.ToggleSubject(id, enable, out msg);
 
                 return Json(new { success = isToggle, message = msg });
             }
@@ -197,7 +214,9 @@ namespace SMS.Controllers
         /// <returns></returns>
         public ActionResult Search(string searchTerm, string searchCriteria)
         {
-            var subjects = _subjectBL.SearchSubject(searchTerm, searchCriteria).ToList();
+            //var subjects = _subjectBL.SearchSubject(searchTerm, searchCriteria).ToList();
+
+            var subjects = _subjectRepository.SearchSubject(searchTerm, searchCriteria).ToList();
 
             if (subjects.Count > 0)
             {

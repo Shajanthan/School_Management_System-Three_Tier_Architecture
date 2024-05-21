@@ -4,6 +4,8 @@
 /// <author>Shajanthan</author>
 /// 
 using SMS_BL.Student;
+using SMS_BL.Student.Interface;
+using SMS_Data;
 using SMS_Models.Student;
 using SMS_ViewModels.Student;
 using System;
@@ -15,7 +17,11 @@ namespace SMS.Controllers
 {
     public class StudentController : Controller
     {
-        private readonly StudentBL _studentBL = new StudentBL();
+        private readonly IStudentRepository _studentRepository;
+
+        public StudentController() {
+            _studentRepository = new StudentRepository(new SMS_DBEntities());
+        }
 
         // GET: Student
         public ActionResult Index()
@@ -35,7 +41,7 @@ namespace SMS.Controllers
         {
             var studentResults = new StudentViewModel();
 
-            studentResults.StudentList = _studentBL.GetAllStudents(isActive);
+            studentResults.StudentList = _studentRepository.GetAllStudents(isActive);
 
             List<StudentBO> pageData;
             int totalPage;
@@ -84,7 +90,7 @@ namespace SMS.Controllers
             var msg = "";
             try
             {
-                bool deleteStudent = _studentBL.DeleteStudent(id, out msg);
+                bool deleteStudent = _studentRepository.DeleteStudent(id, out msg);
 
 
                 return Json(new { success = deleteStudent, message = msg });
@@ -107,7 +113,7 @@ namespace SMS.Controllers
             var msg = "";
             try
             {
-                bool isToggle = _studentBL.ToggleStudent(id, enable, out msg);
+                bool isToggle = _studentRepository.ToggleStudent(id, enable, out msg);
 
                 return Json(new { success = isToggle, message = msg });
             }
@@ -128,7 +134,7 @@ namespace SMS.Controllers
             {
                 return PartialView("_AddStudent", new StudentBO());
             }
-            var student = _studentBL.GetStudentByID(id);
+            var student = _studentRepository.GetStudentByID(id);
             return PartialView("_AddStudent", student);
 
         }
@@ -148,7 +154,7 @@ namespace SMS.Controllers
             {
                 try
                 {
-                    bool isSaveSuccess = _studentBL.SaveStudent(student, out msg);
+                    bool isSaveSuccess = _studentRepository.SaveStudent(student, out msg);
 
                     return Json(new { success = isSaveSuccess, message = msg });
                 }
@@ -173,7 +179,7 @@ namespace SMS.Controllers
         /// <returns></returns>
         public JsonResult IsStudentRegNoAvailable(string regNo)
         {
-            bool isAvailable = _studentBL.CheckRegNo(regNo);
+            bool isAvailable = _studentRepository.CheckRegNo(regNo);
             return Json(isAvailable, JsonRequestBehavior.AllowGet);
         }
 
@@ -184,7 +190,7 @@ namespace SMS.Controllers
         /// <returns></returns>
         public JsonResult IsDisplayAvailable(string displayName)
         {
-            bool isAvailable = _studentBL.CheckStudentDisplayName(displayName);
+            bool isAvailable = _studentRepository.CheckStudentDisplayName(displayName);
             return Json(isAvailable, JsonRequestBehavior.AllowGet);
         }
 
@@ -195,7 +201,7 @@ namespace SMS.Controllers
         /// <returns></returns>
         public JsonResult IsEmailAvailable(string email)
         {
-            bool isAvailable = _studentBL.CheckEmail(email);
+            bool isAvailable = _studentRepository.CheckEmail(email);
             return Json(isAvailable, JsonRequestBehavior.AllowGet);
         }
 
@@ -209,7 +215,7 @@ namespace SMS.Controllers
 
             var studentResult = new StudentViewModel
             {
-                Student = _studentBL.GetStudentByID(id)
+                Student = _studentRepository.GetStudentByID(id)
             };
 
 
@@ -230,7 +236,7 @@ namespace SMS.Controllers
         /// <returns></returns>
         public ActionResult Search(string searchTerm, string searchCriteria)
         {
-            var students = _studentBL.SearchStudent(searchTerm, searchCriteria).ToList();
+            var students = _studentRepository.SearchStudent(searchTerm, searchCriteria).ToList();
 
             if (students.Count > 0)
             {

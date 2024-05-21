@@ -1,7 +1,11 @@
 ﻿using SMS_BL.Allocation;
+using SMS_BL.Allocation.Interface;
 using SMS_BL.Student;
+using SMS_BL.Student.Interface;
 using SMS_BL.Subject;
+using SMS_BL.Subject.Interface;
 using SMS_BL.Teacher;
+using SMS_BL.Teacher.Interface;
 using SMS_Data;
 using SMS_Models.Allocation;
 using SMS_Models.Student;
@@ -18,28 +22,36 @@ namespace SMS.Controllers
     public class AllocationController : Controller
     {
 
-        private readonly AllocationBL _allocationBL = new AllocationBL();
+        private readonly IAllocationRepository _allocationRepository;
 
-        private readonly SubjectBL _subjectBL = new SubjectBL();
+        private readonly ISubjectRepository _subjectRepository;
 
-        private readonly TeacherBL _teacherBL = new TeacherBL();
+        private readonly ITeacherRepository _teacherRepository;
 
-        private readonly StudentBL _studentBL = new StudentBL();
+        private readonly IStudentRepository _studentRepository;
+
 
         //Load ViewBag Values
         public AllocationController() {
 
-            ViewBag.Subjects = _subjectBL.GetAllSubject().Where(s => s.IsEnable == true)
+            _studentRepository = new StudentRepository(new SMS_DBEntities());
+            _subjectRepository = new SubjectRepository(new SMS_DBEntities());
+            _teacherRepository = new TeacherRepository(new SMS_DBEntities());
+            _allocationRepository = new AllocationRepository(new SMS_DBEntities());
+
+            ViewBag.Subjects = _subjectRepository.GetAllSubject().Where(s => s.IsEnable == true)
                .Select(s => new { SubjectID = s.SubjectID, Name = s.SubjectCode + " - " + s.Name })
                .ToList();
 
-            ViewBag.Teachers = _teacherBL.GetAllTeachers().Where(s => s.IsEnable == true)
+            ViewBag.Teachers = _teacherRepository.GetAllTeachers().Where(s => s.IsEnable == true)
                 .Select(s => new { TeacherID = s.TeacherID, DisplayName = s.TeacherRegNo + " - " + s.DisplayName })
                .ToList();
 
-            ViewBag.Students = _studentBL.GetAllStudents().Where(s => s.IsEnable == true)
+            ViewBag.Students = _studentRepository.GetAllStudents().Where(s => s.IsEnable == true)
                .Select(s => new { StudentID = s.StudentID, DisplayName = s.StudentRegNo + " - " + s.DisplayName })
               .ToList();
+
+           
 
         }
 
@@ -60,7 +72,7 @@ namespace SMS.Controllers
         {
             var allocatedSubject = new AllocationViewModel();
 
-            allocatedSubject.SubjectAllocationList = _allocationBL.GetAllSubjectAllocation();
+            allocatedSubject.SubjectAllocationList = _allocationRepository.GetAllSubjectAllocation();
 
             return PartialView("_AllocatedSubjects", allocatedSubject.SubjectAllocationList);
         }
@@ -76,7 +88,7 @@ namespace SMS.Controllers
             var msg = "";
             try
             {
-                bool deleteSubjectAllocation = _allocationBL.DeleteSubjectAllocation(id, out msg);
+                bool deleteSubjectAllocation = _allocationRepository.DeleteSubjectAllocation(id, out msg);
 
 
                 return Json(new { success = deleteSubjectAllocation, message = msg });
@@ -98,7 +110,7 @@ namespace SMS.Controllers
             {
                 return PartialView("_AddTeacherSubjectAllocation", new SubjectAllocationBO());
             }
-            var subjectAllocation = _allocationBL.GetSubjectAllocationByID(id);
+            var subjectAllocation = _allocationRepository.GetSubjectAllocationByID(id);
             return PartialView("_AddTeacherSubjectAllocation", subjectAllocation);
 
         }
@@ -118,7 +130,7 @@ namespace SMS.Controllers
             {
                 try
                 {
-                    bool isSaveSuccess = _allocationBL.SaveSubjectAllocation(subjectAllocation, out msg);
+                    bool isSaveSuccess = _allocationRepository.SaveSubjectAllocation(subjectAllocation, out msg);
 
                     return Json(new { success = isSaveSuccess, message = msg });
                 }
@@ -144,7 +156,7 @@ namespace SMS.Controllers
         /// <returns></returns>
         public ActionResult SubjectAllocationSearch(string searchTerm, string searchCriteria)
         {
-            var subjects = _allocationBL.SearchSubjectAllocation(searchTerm, searchCriteria).ToList();
+            var subjects = _allocationRepository.SearchSubjectAllocation(searchTerm, searchCriteria).ToList();
 
             if (subjects.Count > 0)
             {
@@ -169,7 +181,7 @@ namespace SMS.Controllers
             var allStudentAllocations = new AllocationViewModel();
 
 
-            allStudentAllocations.StudentAllocationList = _allocationBL.GetAllStudentAllocation(isActive);
+            allStudentAllocations.StudentAllocationList = _allocationRepository.GetAllStudentAllocation(isActive);
 
             return PartialView("_AllocatedStudents", allStudentAllocations.StudentAllocationList);
 
@@ -196,7 +208,7 @@ namespace SMS.Controllers
             var msg = "";
             try
             {
-                bool deleteStudentAllocation = _allocationBL.DeleteStudentAllocation(id, out msg);
+                bool deleteStudentAllocation = _allocationRepository.DeleteStudentAllocation(id, out msg);
 
 
                 return Json(new { success = deleteStudentAllocation, message = msg });
@@ -217,7 +229,7 @@ namespace SMS.Controllers
             var msg = "";
             try
             {
-                bool deleteStudentAllocation = _allocationBL.DeleteAllStudentAllocation(id, out msg);
+                bool deleteStudentAllocation = _allocationRepository.DeleteAllStudentAllocation(id, out msg);
 
 
                 return Json(new { success = deleteStudentAllocation, message = msg });
@@ -239,7 +251,7 @@ namespace SMS.Controllers
             {
                 return PartialView("_AddStudentAllocation", new StudentAllocationBO());
             }
-            var subjectAllocation = _allocationBL.GetStudenttAllocationByID(id);
+            var subjectAllocation = _allocationRepository.GetStudenttAllocationByID(id);
             return PartialView("_AddStudentAllocation", subjectAllocation);
 
         }
@@ -259,7 +271,7 @@ namespace SMS.Controllers
             {
                 try
                 {
-                    bool isSaveSuccess = _allocationBL.SaveStudentAllocation(studentAllocation, out msg);
+                    bool isSaveSuccess = _allocationRepository.SaveStudentAllocation(studentAllocation, out msg);
 
                     return Json(new { success = isSaveSuccess, message = msg });
                 }
@@ -284,7 +296,7 @@ namespace SMS.Controllers
         /// <returns></returns>
         public ActionResult GetAllocatedSubject()
         {
-            var data = _allocationBL.GetAllocatedSubjects().ToList();
+            var data = _allocationRepository.GetAllocatedSubjects().ToList();
 
             if (data.Count > 0)
             {
@@ -304,7 +316,7 @@ namespace SMS.Controllers
         /// <returns></returns>
         public JsonResult GetTeachersBySubject(long subjectId)
         {
-            var teachers = _allocationBL.GetTeachersBySubject(subjectId);
+            var teachers = _allocationRepository.GetTeachersBySubject(subjectId);
             return Json(teachers, JsonRequestBehavior.AllowGet);
         }
 
@@ -317,7 +329,7 @@ namespace SMS.Controllers
         [HttpGet]
         public JsonResult GetAllocationID(long subjectId,long teacherId)
         {
-            var allocationID = _allocationBL.GetSubjectAllocationID(subjectId,teacherId);
+            var allocationID = _allocationRepository.GetSubjectAllocationID(subjectId,teacherId);
             return Json(allocationID, JsonRequestBehavior.AllowGet);
         }
         
@@ -329,7 +341,7 @@ namespace SMS.Controllers
         /// <returns></returns>
         public ActionResult StudentAllocationSearch(string searchTerm, string searchCriteria)
         {
-            var students = _allocationBL.SearchStudentAllocation(searchTerm, searchCriteria).ToList();
+            var students = _allocationRepository.SearchStudentAllocation(searchTerm, searchCriteria).ToList();
 
             if (students.Count > 0)
             {
