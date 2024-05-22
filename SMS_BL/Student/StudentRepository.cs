@@ -23,6 +23,8 @@ namespace SMS_BL.Student
             _dbEntities = dbEntities;
         }
 
+        
+
         /// <summary>
         /// Get all the Students details
         /// </summary>
@@ -30,6 +32,7 @@ namespace SMS_BL.Student
         /// <returns></returns>
         public IEnumerable<StudentBO> GetAllStudents(bool? isActive = null)
         {
+
             var allStudents = _dbEntities.Students.Select(s => new StudentBO()
             {
                 StudentID = s.StudentID,

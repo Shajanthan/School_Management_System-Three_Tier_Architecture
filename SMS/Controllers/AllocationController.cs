@@ -32,8 +32,8 @@ namespace SMS.Controllers
 
 
         //Load ViewBag Values
-        public AllocationController() {
-
+        public AllocationController() 
+        {
             _studentRepository = new StudentRepository(new SMS_DBEntities());
             _subjectRepository = new SubjectRepository(new SMS_DBEntities());
             _teacherRepository = new TeacherRepository(new SMS_DBEntities());
