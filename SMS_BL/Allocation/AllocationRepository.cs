@@ -242,7 +242,7 @@ namespace SMS_BL.Allocation
         /// <returns></returns>
         public bool IsSubjectAllocationInUse(long id)
         {
-            bool isSubjectAllocationInUse = _dbEntities.Teacher_Subject_Allocation.Any(s => s.SubjectAllocationID == id);
+            bool isSubjectAllocationInUse = _dbEntities.Student_Subject_Teacher_Allocation.Any(s => s.SubjectAllocationID == id);
             return isSubjectAllocationInUse;
         }
 
