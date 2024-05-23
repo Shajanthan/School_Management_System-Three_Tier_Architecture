@@ -250,6 +250,17 @@ namespace SMS.Controllers
             return PartialView("_TeacherDetails", teacherResult);
         }
 
+        /// <summary>
+        /// Check teacher is allocated or not
+        /// </summary>
+        /// <param name="teacherID"></param>
+        /// <returns></returns>
+        public JsonResult IsTeacherAllocated(long teacherID)
+        {
+            bool isAllocated = _teacherRepository.IsTeacherAllocated(teacherID);
+            return Json(isAllocated, JsonRequestBehavior.AllowGet);
+        }
+
 
     }
 }

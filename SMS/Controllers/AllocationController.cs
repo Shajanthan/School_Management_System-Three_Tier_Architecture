@@ -1,4 +1,9 @@
-﻿using SMS_BL.Allocation;
+﻿/// <summary>
+///
+/// </summary>
+/// <author>Shajanthan</author>
+
+using SMS_BL.Allocation;
 using SMS_BL.Allocation.Interface;
 using SMS_BL.Student;
 using SMS_BL.Student.Interface;
@@ -185,17 +190,6 @@ namespace SMS.Controllers
 
             return PartialView("_AllocatedStudents", allStudentAllocations.StudentAllocationList);
 
-            //var allStudentAllocations = _allocationBL.GetAllStudentAllocation();
-
-            //if (allStudentAllocations != null)
-            //{
-
-            //    return Json(new { success = true, data = allStudentAllocations }, JsonRequestBehavior.AllowGet);
-            //}
-            //else
-            //{
-            //    return Json(new { success = false, message = "No Data Found" }, JsonRequestBehavior.AllowGet);
-            //}
         }
 
         /// <summary>
@@ -353,6 +347,13 @@ namespace SMS.Controllers
                 //return Json(students, JsonRequestBehavior.AllowGet);
                 return PartialView("_StudentAllocationSearchTable", null);
             }
+        }
+
+
+        public JsonResult IsSubjectAllocationInUse(long subjectAllocationID)
+        {
+            bool isAllocated = _allocationRepository.IsSubjectAllocationInUse(subjectAllocationID);
+            return Json(isAllocated, JsonRequestBehavior.AllowGet);
         }
 
     }

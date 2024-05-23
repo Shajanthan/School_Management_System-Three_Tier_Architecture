@@ -1,4 +1,8 @@
-﻿using SMS_BL.Allocation.Interface;
+﻿/// <summary>
+///
+/// </summary>
+/// <author>Shajanthan</author>
+using SMS_BL.Allocation.Interface;
 using SMS_Data;
 using SMS_Models.Allocation;
 using SMS_ViewModels.Allocation;
@@ -231,6 +235,16 @@ namespace SMS_BL.Allocation
             return allSubjects;
         }
 
+        /// <summary>
+        /// Check the subject allocation is in use or not
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool IsSubjectAllocationInUse(long id)
+        {
+            bool isSubjectAllocationInUse = _dbEntities.Teacher_Subject_Allocation.Any(s => s.SubjectAllocationID == id);
+            return isSubjectAllocationInUse;
+        }
 
 
         //-------------------------------------------------------Student Allocation--------------------------------------------------------------------

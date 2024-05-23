@@ -176,6 +176,8 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="SMS_Scripts\Allocation\Allocation.js" />
     <Content Include="SMS_Scripts\Student\Student.js" />
+    <Content Include="SMS_Scripts\Subject\Subject.js" />
+    <Content Include="SMS_Scripts\Teacher\Teacher.js" />
     <Content Include="Style\SMS.css" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

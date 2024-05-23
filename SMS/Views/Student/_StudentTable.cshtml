@@ -1,5 +1,4 @@
-﻿
-@if (Model != null)
+﻿@if (Model != null)
 {
     foreach (var student in Model)
     {
@@ -22,14 +21,28 @@
             <td>@student.Gender</td>
             <td>@student.ContactNo</td>
             <td>
-                <button type="button" class="btn btn-sm btn-primary" onclick="editStudent('@student.StudentID')"><i class="bi bi-pen small-icons"></i></button>
-                <button type="button" class="btn btn-sm btn-danger" onclick="deleteStudent('@student.StudentID',false,'@student.DisplayName')"><i class="bi bi-trash small-icons"></i></button>
+                <button type="button" class="btn btn-sm btn-primary edit-btn" id="editBtn_@student.StudentID" onclick="editStudent('@student.StudentID')" disabled><i class="bi bi-pen small-icons"></i></button>
+                <button type="button" class="btn btn-sm btn-danger delete-btn" id="deleteBtn_@student.StudentID" onclick="deleteStudent('@student.StudentID',false,'@student.DisplayName')" disabled><i class="bi bi-trash small-icons"></i></button>
                 <button type="button" class="btn btn-sm btn-info m-1" onclick="moreDetails('@student.StudentID',false,'@student.DisplayName')"><i class="bi bi-ticket-detailed small-icons"></i></button>
-
             </td>
         </tr>
+        <script>
+            //check the student is allocated or not
+            $.ajax({
+                url: '/Student/IsStudentAllocated',
+                type: 'GET',
+                data: { studentID: '@student.StudentID' },
+                success: function (response) {
+                    if (response) {
+                        $('#editBtn_@student.StudentID, #deleteBtn_@student.StudentID').hide();
+                    }
+                    else {
+                        $('#editBtn_@student.StudentID, #deleteBtn_@student.StudentID').prop('disabled', false);
+                    }
+                }
+            });
+        </script>
     }
-
 }
 else
 {

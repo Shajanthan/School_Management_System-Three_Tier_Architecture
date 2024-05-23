@@ -4,22 +4,38 @@ pageSize = 5;
 totalPages = 0;
 
 $(document).ready(function () {
+    //Teacher details pop up close
+    $('.close').click(function () {
+        $('#teacherDetailsModal').modal('hide');
+    });
 
     //Add new button
     $('#addNew').click(function () {
-        $('#addStudentForm').show();
-        $('#studentDetails').hide();
-        $('#studentHead').hide();
+        $('#addTeacherForm').show();
+        $('#teacherDetails').hide();
+        $('#teacherHead').hide();
         $('#paginationNextPrevious').hide();
         $.ajax({
-            url: '/Student/AddStudent',
+            url: '/Teacher/AddTeacher',
             type: 'GET',
             success: function (response) {
-                $('#addStudentForm').html(response);
-                $.validator.unobtrusive.parse($('#addStudentForm'));
+                $('#addTeacherForm').html(response);
+                $.validator.unobtrusive.parse($('#addTeacherForm'));
 
             }
         });
+    });
+
+
+
+    //Search
+    $('#searchInput').on('input', function () {
+        var searchTerm = $(this).val().trim();
+        if (searchTerm.length >= 2) {
+            searchTeacher(searchTerm);
+        } else if (searchTerm.length === 0) {
+            loadData(currentPage, pageSize)
+        }
     });
 
     //Active filter
@@ -27,21 +43,6 @@ $(document).ready(function () {
         $('#nextButton').removeClass('disabled');
         currentPage = 1;
         loadData(currentPage, pageSize);
-    });
-
-    //Student details pop up close
-    $('.close').click(function () {
-        $('#studentDetailsModal').modal('hide');
-    });
-
-    //search
-    $('#searchInput').on('input', function () {
-        var searchTerm = $(this).val().trim();
-        if (searchTerm.length >= 2) {
-            searchStudent(searchTerm);
-        } else if (searchTerm.length === 0) {
-            loadData(currentPage, pageSize)
-        }
     });
 
     //Sort filter
@@ -61,19 +62,21 @@ $(document).ready(function () {
     //Load Data on page load
     loadData(currentPage, pageSize)
 
+
 });
 
-
-//initially load the all Student data [and sory by availability]
+//initially load the all teacher data [and sory by availability]
 async function loadData(currentPage, pageSize) {
     var isActiveFilter = $('#isActiveFilter').val();
+
     try
     {
         var data = await $.ajax({
-            url: '/Student/AllStudent',
+            url: '/Teacher/AllTeachers',
             type: 'GET',
             data: { pageNumber: currentPage, pageSize: pageSize, isActive: isActiveFilter }
         });
+
 
         $('#tableBody').empty();
 
@@ -83,44 +86,44 @@ async function loadData(currentPage, pageSize) {
             var buttonText = item.IsEnable ? 'Enabled' : 'Disabled';
             var toggleState = item.IsEnable ? 'false' : 'true';
             var iconStyle = item.IsEnable ? '' : 'filter: grayscale(100%);';
-            var enableButton = '<button type="button" class="btn btn-sm ' + enableButtonClass + '" onclick="toggleEnable(\'' + item.StudentID + '\', ' + toggleState + ', \'' + item.DisplayName + '\')"><i class="' + enableButtonIconClass + '" style="' + iconStyle + '"></i></button>';
-            var editUrl = '/Student/EditStudent/' + item.StudentID;
-            var deleteUrl = '/Student/DeleteStudent/' + item.StudentID;
+            var enableButton = '<button type="button" class="btn btn-sm ' + enableButtonClass + '" onclick="toggleEnable(\'' + item.TeacherID + '\', ' + toggleState + ', \'' + item.DisplayName + '\')"><i class="' + enableButtonIconClass + '" style="' + iconStyle + '"></i></button>';
+            var editUrl = '/Teacher/EditTeacher/' + item.TeacherID;
+            var deleteUrl = '/Teacher/DeleteTeacher/' + item.TeacherID;
             var emailIcon = '<i class="bi bi-envelope-fill "></i>';
             var telIcon = '<i class="bi bi-telephone-fill text-success"></i>';
             var emailLink = '<a href="mailto:' + item.Email + '" title="' + item.Email + '">' + emailIcon + '</a>';
             var contactNo = '<i class="bi bi-telephone-fill text-success" data-toggle="tooltip" title="' + item.ContactNo + '"></i>';
-            var studentID = item.StudentID;
+            var teacherID = item.TeacherID;
             var editButton;
             var deleteButton;
 
             // check student allocated or not
             var response = await $.ajax({
-                url: '/Student/IsStudentAllocated',
+                url: '/Teacher/IsTeacherAllocated',
                 type: 'GET',
-                data: { studentID: studentID }
+                data: { teacherID: teacherID }
             });
 
             if (!response) {
-                editButton = '<button type="button" class="btn btn-sm btn-primary" onclick="editStudent(\'' + item.StudentID + '\')"><i class="bi bi-pen small-icons"></i></button> ';
-                deleteButton = '<button type="button" class="btn btn-sm btn-danger" onclick="deleteStudent(\'' + item.StudentID + '\', ' + toggleState + ', \'' + item.FirstName + ' ' + item.LastName + '\')"><i class="bi bi-trash small-icons"></i></button>';
-            } else {
+                editButton = '<button type="button" class="btn btn-sm btn-primary" onclick="editTeacher(\'' + item.TeacherID + '\')"><i class="bi bi-pen small-icons"></i></button> ';
+                deleteButton = '<button type="button" class="btn btn-sm btn-danger" onclick="deleteTeacher(\'' + item.TeacherID + '\', ' + toggleState + ', \'' + item.FirstName + ' ' + item.LastName + '\')"><i class="bi bi-trash small-icons"></i></button>';
+            }
+            else {
                 editButton = "";
                 deleteButton = "";
             }
 
             var row = '<tr>' +
                 '<td>' + enableButton + '</td>' +
-                '<td>' + item.StudentRegNo + '</td>' +
+                '<td>' + item.TeacherRegNo + '</td>' +
                 '<td>' + item.FirstName + '</td>' +
                 '<td>' + item.LastName + '</td>' +
                 '<td>' + item.DisplayName + '</td>' +
                 '<td>' + emailLink + '</td>' +
                 '<td>' + item.Gender + '</td>' +
                 '<td>' + contactNo + '</td>' +
-                '<td>' +
-                editButton + deleteButton +
-                '<button type="button" class="btn btn-sm btn-info m-1" onclick="moreDetails(\'' + item.StudentID + '\', ' + toggleState + ', \'' + item.FirstName + ' ' + item.LastName + '\')"><i class="bi bi-ticket-detailed small-icons"></i>' +
+                '<td>' + editButton + deleteButton+
+               '<button type="button" class="btn btn-sm btn-info m-1" onclick="moreDetails(\'' + item.TeacherID + '\', ' + toggleState + ', \'' + item.FirstName + ' ' + item.LastName + '\')"><i class="bi bi-ticket-detailed small-icons"></i>' +
                 '</td>' +
                 '</tr>';
             $('#tableBody').append(row);
@@ -133,37 +136,37 @@ async function loadData(currentPage, pageSize) {
     catch (error) {
         console.log(error);
         alert('An error occurred while loading data.');
-    }
+    }       
+    
 }
 
-
-//pop up Student detail
-function moreDetails(studentID) {
+//pop up teacher detail
+function moreDetails(teacherID) {
     $.ajax({
-        url: '/Student/GetStudentDetails/' + studentID,
+        url: '/Teacher/GetTeacherDetails/' + teacherID,
         type: 'GET',
         success: function (data) {
-            $('#studentDetailsBody').html(data);
-            $('#studentDetailsModal').modal('show');
+            $('#teacherDetailsBody').html(data);
+            $('#teacherDetailsModal').modal('show');
         },
         error: function (error) {
             console.log(error);
-            alert('An error occurred while fetching student details.');
+            alert('An error occurred while fetching teacher details.');
         }
     });
 }
 
 //back buttton on add and update
-function backStudent() {
-    $('#addStudentForm').hide();
-    $('#studentDetails').show();
-    $('#studentHead').show();
-    $('#addStudentForm').find('input[type=text], input[type=number], input[type=date], select').val('');
+function backTeacher() {
+    $('#addTeacherForm').hide();
     $('#paginationNextPrevious').show();
+    $('#teacherDetails').show();
+    $('#teacherHead').show();
+    $('#addTeacherForm').find('input[type=text], input[type=number], input[type=date], select').val('');
 }
 
-//add Student
-function addStudentSuccess(response) {
+//add teacher
+function addTeacherSuccess(response) {
     if (response.success) {
         Swal.fire({
             icon: 'success',
@@ -174,28 +177,29 @@ function addStudentSuccess(response) {
         }).then((result) => {
             if (result.isConfirmed) {
                 loadData(currentPage, pageSize)
-                $('#addStudentForm').hide();
+                $('#addTeacherForm').hide();
                 $('#paginationNextPrevious').show();
-                $('#addStudentForm').find('input[type=text], input[type=number], input[type=date], select').val('');
-                $('#studentDetails').show();
-                $('#studentHead').show();
+                $('#addTeacherForm').find('input[type=text], input[type=number], input[type=date], select').val('');
+                $('#teacherDetails').show();
+                $('#teacherHead').show();
             }
         });
     } else {
-        Swal.fire({ icon: 'warning', title: 'Warning', text: response.message });
+        Swal.fire({ icon: 'warning', title: 'Warningry', text: response.message });
     }
 }
 
-function addStudentFailure(error) {
+function addTeacherFailure(error) {
     console.log(error);
-    Swal.fire('Error!', 'Error on adding the student', 'error');
+    Swal.fire('Error!', 'Error on adding the teacher', 'error');
 }
 
+
 //delete teacher
-function deleteStudent(studentID, state, fname) {
+function deleteTeacher(teacherID, state, fname) {
     Swal.fire({
         title: 'Are you sure?',
-        text: 'Are you sure you want to delete the student "' + fname + '" ?',
+        text: 'Are you sure you want to delete the teacher "' + fname + '" ?',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -204,11 +208,11 @@ function deleteStudent(studentID, state, fname) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: '/Student/DeleteStudent/' + studentID,
+                url: '/Teacher/DeleteTeacher/' + teacherID,
                 type: 'POST',
                 success: function (response) {
                     if (response.success) {
-                        $('#tableBody tr:has(td:contains(' + studentID + '))').remove();
+                        $('#tableBody tr:has(td:contains(' + teacherID + '))').remove();
                         loadData(currentPage, pageSize)
                         Swal.fire('Deleted!', 'Record deleted successfully.', 'success');
                     } else {
@@ -217,13 +221,12 @@ function deleteStudent(studentID, state, fname) {
                 },
                 error: function (error) {
                     console.log(error);
-                    Swal.fire('Error!', 'An error occurred while deleting the student.', 'error');
+                    Swal.fire('Error!', 'An error occurred while deleting the teacher.', 'error');
                 }
             });
         }
     });
 }
-
 
 //toggle teacher availability
 function toggleEnable(id, enable, name) {
@@ -237,7 +240,7 @@ function toggleEnable(id, enable, name) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: '/Student/ToggleEnable',
+                url: '/Teacher/ToggleEnable',
                 type: 'POST',
                 data: { id: id, enable: enable },
                 success: function (response) {
@@ -250,7 +253,7 @@ function toggleEnable(id, enable, name) {
                 },
                 error: function (error) {
                     console.log(error);
-                    Swal.fire('Error!', 'An error occurred while toggling student status.', 'error');
+                    Swal.fire('Error!', 'An error occurred while toggling teacher status.', 'error');
                 }
             });
         }
@@ -258,32 +261,35 @@ function toggleEnable(id, enable, name) {
 }
 
 
-function editStudent(studentID) {
+
+
+//Edit Teacher
+function editTeacher(teacherID) {
     $.ajax({
-        url: '/Student/AddStudent/' + studentID,
+        url: '/Teacher/AddTeacher/' + teacherID,
         type: 'GET',
         success: function (data) {
             $('#paginationNextPrevious').hide();
-            $('#addStudentForm').html(data);
-            $('#addStudentForm').show();
-            $.validator.unobtrusive.parse($('#editStudentForm'));
-            $('#studentDetails').hide();
-            $('#studentHead').hide();
+            $('#addTeacherForm').html(data);
+            $('#addTeacherForm').show();
+            $.validator.unobtrusive.parse($('#addTeacherForm'));
+            $('#teacherDetails').hide();
+            $('#teacherHead').hide();
         },
         error: function (error) {
             console.log(error);
-            Swal.fire('Error!', 'An error occurred while fetching student details.', 'error');
+            Swal.fire('Error!', 'An error occurred while fetching teacher details.', 'error');
         }
     });
 }
 
-//search student
-function searchStudent() {
+//search teacher
+function searchTeacher() {
     var searchTerm = $('#searchInput').val().trim();
     var searchCriteria = $('#searchCriteria').val();
     if (searchTerm.length >= 2) {
         $.ajax({
-            url: '/Student/Search',
+            url: '/Teacher/Search',
             type: 'GET',
             data: { searchTerm: searchTerm, searchCriteria: searchCriteria },
             success: function (data) {
@@ -304,7 +310,7 @@ function searchStudent() {
 var sortAscending = true;
 
 function sortTable(column) {
-    var tableRows = $('#studentDetails tbody tr').get();
+    var tableRows = $('#teacherDetails tbody tr').get();
     tableRows.sort(function (a, b) {
         var valA = $(a).find('td').eq(column).text().toUpperCase();
         var valB = $(b).find('td').eq(column).text().toUpperCase();
@@ -339,7 +345,6 @@ function previousData() {
     }
 }
 
-//next data
 function nextData() {
     if (currentPage == totalPages) {
         $('#nextButton').addClass('disabled');

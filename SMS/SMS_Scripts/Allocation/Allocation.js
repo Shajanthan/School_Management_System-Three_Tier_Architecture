@@ -71,28 +71,6 @@ $(document).ready(function () {
 
 
 
-
-//function loadSubjectAllocationData() {
-//    $.ajax({
-//        url: '/Allocation/AllSubjectAllocation',
-//        type: 'GET',
-//        success: function (data) {
-//            $('#subjectAllocationTableBody').empty();
-
-//            var groupedData = groupByTeacher(data.data);
-
-//            $.each(groupedData, function (teacherName, items) {
-//               var teacherRow = createTeacherRow(teacherName, items);
-//                $('#subjectAllocationTableBody').append(teacherRow);
-//            });
-//        },
-//        error: function (error) {
-//            console.log(error);
-//            alert('An error occurred while loading data.');
-//        }
-//    });
-//}
-
 function loadSubjectAllocationData() {
     $.ajax({
         url: '/Allocation/AllSubjectAllocation',
@@ -107,43 +85,6 @@ function loadSubjectAllocationData() {
         }
     });
 }
-
-
-
-
-//function groupByTeacher(data) {
-//    var groupedData = {};
-//    $.each(data, function (index, item) {
-//        if (!groupedData[item.TeacherName]) {
-//            groupedData[item.TeacherName] = [];
-//        }
-//        groupedData[item.TeacherName].push(item);
-//    });
-//    return groupedData;
-//}
-
-//function createTeacherRow(teacherName, items) {
-//    var rows = '';
-//    $.each(items, function (index, item) {
-//        var buttonGroup = createButtonGroup(item.SubjectAllocationID,"SubjectAllocation");
-//        var subjectInfo = '<strong>' + item.SubjectName + '</strong> (Subject Code- ' + item.SubjectCode+')';
-//        var row = '<tr>' +
-//            (index === 0 ? '<td rowspan="' + items.length + '">' + '<strong>' + teacherName + '</strong> (Reg No- ' + item.TeacherRegNo + ')</td>' : '') +
-//            '<td>' + subjectInfo + '</td>' +
-//            '<td>' + buttonGroup + '</td>' +
-//            '</tr>';
-//        rows += row;
-//    });
-//    return rows;
-//}
-
-///*create a button group*/
-//function createButtonGroup(subjectAllocationID,fnName) {
-//    return '<button type="button" class="btn btn-sm btn-primary" onclick="edit' + fnName +'(\'' + subjectAllocationID + '\')"><i class="bi bi-pen small-icons"></i></button> ' +
-//        '<button type="button" class="btn btn-sm btn-danger" onclick="delete' + fnName +'(\'' + subjectAllocationID + '\')"><i class="bi bi-trash small-icons"></i></button>';
-//}
-
-
 
 function addTeacherSubjectAllocationSuccess(response) {
     if (response.success) {
@@ -281,16 +222,6 @@ function loadStudentAllocationData() {
             $('#studentAllocationTableBody').html(data);
             /*console.log(data);*/
             activeSubjectTeacher();
-
-            //$('#studentAllocationTableBody').empty();
-
-            //// Group data by student name
-            //var groupedData = groupByStudent(data.data);
-
-            //$.each(groupedData, function (studentName, items) {
-            //    var studentRow = createStudentRow(studentName, items);
-            //    $('#studentAllocationTableBody').append(studentRow);
-            //});
         },
         error: function (error) {
             console.log(error);
@@ -299,6 +230,7 @@ function loadStudentAllocationData() {
     });
 }
 
+//Toggle student enable
 function toggleEnable(id, enable, name) {
     Swal.fire({
         title: 'Confirmation',
@@ -329,35 +261,6 @@ function toggleEnable(id, enable, name) {
         }
     });
 }
-
-
-//function groupByStudent(data) {
-//    var groupedData = {};
-//    $.each(data, function (index, item) {
-//        if (!groupedData[item.StudentName]) {
-//            groupedData[item.StudentName] = [];
-//        }
-//        groupedData[item.StudentName].push(item);
-//    });
-//    return groupedData;
-//}
-
-//function createStudentRow(studentName, items) {
-//    var rows = '';
-//    $.each(items, function (index, item) {
-//        var buttonGroup = createButtonGroup(item.studentAllocationID, "StudentAllocation");
-//        var subjectInfo = '<strong>' + item.SubjectName + '</strong> (Subject Code- ' + item.subjectCode + ')';
-//        var teacherInfo = '<strong>' + item.TeacherName + '</strong> (Reg No- ' + item.teacherRegNo + ')';
-//        var row = '<tr>' +
-//            (index === 0 ? '<td rowspan="' + items.length + '">' + '<strong>' + studentName + '</strong> (Reg No- ' + item.studentRegNo + ')</td>' : '') +
-//            '<td>' + teacherInfo + '</td>' +
-//            '<td>' + subjectInfo + '</td>' +
-//            '<td>' + buttonGroup + '</td>' +
-//            '</tr>';
-//        rows += row;
-//    });
-//    return rows;
-//}
 
 
 

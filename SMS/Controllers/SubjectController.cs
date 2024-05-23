@@ -228,7 +228,16 @@ namespace SMS.Controllers
             }
         }
 
-
+        /// <summary>
+        /// check the subject is allocated or not
+        /// </summary>
+        /// <param name="subjectID"></param>
+        /// <returns></returns>
+        public JsonResult IsSubjectAllocated(long subjectID)
+        {
+            bool isAllocated = _subjectRepository.IsSubjectInUse(subjectID);
+            return Json(isAllocated, JsonRequestBehavior.AllowGet);
+        }
 
 
 

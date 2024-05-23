@@ -248,6 +248,18 @@ namespace SMS.Controllers
             }
         }
 
+        /// <summary>
+        /// Check student is allocated for a subject or not
+        /// </summary>
+        /// <param name="studentID"></param>
+        /// <returns></returns>
+        public JsonResult IsStudentAllocated(long studentID)
+        {
+            bool isAllocated = _studentRepository.IsStudentAllocated(studentID);
+            return Json(isAllocated, JsonRequestBehavior.AllowGet);
+        }
+
+
     }
    
 

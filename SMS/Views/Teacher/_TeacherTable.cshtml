@@ -21,12 +21,29 @@
             <td>@teacher.Gender</td>
             <td>@teacher.ContactNo</td>
             <td>
-                <button type="button" class="btn btn-sm btn-primary" onclick="editTeacher('@teacher.TeacherID')"><i class="bi bi-pen small-icons"></i></button>
-                <button type="button" class="btn btn-sm btn-danger" onclick="deleteTeacher('@teacher.TeacherID',false,'@teacher.DisplayName')"><i class="bi bi-trash small-icons"></i></button>
+                <button type="button" class="btn btn-sm btn-primary" id="editBtn_@teacher.TeacherID" onclick="editTeacher('@teacher.TeacherID')"><i class="bi bi-pen small-icons"></i></button>
+                <button type="button" class="btn btn-sm btn-danger" id="deleteBtn_@teacher.TeacherID" onclick="deleteTeacher('@teacher.TeacherID',false,'@teacher.DisplayName')"><i class="bi bi-trash small-icons"></i></button>
                 <button type="button" class="btn btn-sm btn-info m-1" onclick="moreDetails('@teacher.TeacherID',false,'@teacher.DisplayName')"><i class="bi bi-ticket-detailed small-icons"></i></button>
 
             </td>
         </tr>
+        <script>
+             $.ajax({
+               //check the Teacher is allocated or not
+                 url: '/Teacher/IsTeacherAllocated',
+               type: 'GET',
+               data: { teacherID: '@teacher.TeacherID' },
+               success: function (response) {
+                   if (response) {
+                       $('#editBtn_@teacher.TeacherID, #deleteBtn_@teacher.TeacherID').hide();
+                   }
+                   else
+                   {
+                       $('#editBtn_@teacher.TeacherID, #deleteBtn_@teacher.TeacherID').prop('disabled', false);
+                   }
+               }
+           });
+        </script>
     }
 
 }

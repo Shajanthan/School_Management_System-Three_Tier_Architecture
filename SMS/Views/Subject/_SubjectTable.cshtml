@@ -16,10 +16,27 @@
             <td>@subject.SubjectCode</td>
             <td>@subject.Name</td>
             <td>
-                <button type="button" class="btn btn-sm btn-primary" onclick="editSubject('@subject.SubjectID')"><i class="bi bi-pen small-icons"></i></button>
-                <button type="button" class="btn btn-sm btn-danger" onclick="deleteSubject('@subject.SubjectID',false,'@subject.Name')"><i class="bi bi-trash small-icons"></i></button>
+                <button type="button" class="btn btn-sm btn-primary" id="editBtn_@subject.SubjectID" onclick="editSubject('@subject.SubjectID')"><i class="bi bi-pen small-icons"></i></button>
+                <button type="button" class="btn btn-sm btn-danger" id="deleteBtn_@subject.SubjectID" onclick="deleteSubject('@subject.SubjectID',false,'@subject.Name')"><i class="bi bi-trash small-icons"></i></button>
             </td>
         </tr>
+        <script>
+            $.ajax({
+              //check the subject is allocated or not
+              url: '/Subject/IsSubjectAllocated',
+              type: 'GET',
+              data: { subjectID: '@subject.SubjectID' },
+              success: function (response) {
+                  if (response) {
+                      $('#editBtn_@subject.SubjectID, #deleteBtn_@subject.SubjectID').hide();
+                  }
+                  else
+                  {
+                      $('#editBtn_@subject.SubjectID, #deleteBtn_@subject.SubjectID').prop('disabled', false);
+                  }
+              }
+          });
+        </script>
     }
 }
 else

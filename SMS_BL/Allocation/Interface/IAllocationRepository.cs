@@ -1,4 +1,9 @@
-﻿using SMS_Models.Allocation;
+﻿/// <summary>
+///
+/// </summary>
+/// <author>Shajanthan</author>
+
+using SMS_Models.Allocation;
 using SMS_ViewModels.Allocation;
 using System;
 using System.Collections.Generic;
@@ -121,5 +126,12 @@ namespace SMS_BL.Allocation.Interface
         /// <returns></returns>
         IEnumerable<StudentSubjectAllocationGroupByStudentViewModel> SearchStudentAllocation(string term, string category);
 
+
+        /// <summary>
+        /// Checck subject allocation is in use or not
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        bool IsSubjectAllocationInUse(long id);
     }
 }
