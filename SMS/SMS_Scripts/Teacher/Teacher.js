@@ -92,7 +92,7 @@ async function loadData(currentPage, pageSize) {
             var emailIcon = '<i class="bi bi-envelope-fill "></i>';
             var telIcon = '<i class="bi bi-telephone-fill text-success"></i>';
             var emailLink = '<a href="mailto:' + item.Email + '" title="' + item.Email + '">' + emailIcon + '</a>';
-            var contactNo = '<i class="bi bi-telephone-fill text-success" data-toggle="tooltip" title="' + item.ContactNo + '"></i>';
+            var contactNo = '<a href="tel:' + item.ContactNo + '"><i class="bi bi-telephone-fill text-success" data-toggle="tooltip" title="' + item.ContactNo + '"></i></a>';
             var teacherID = item.TeacherID;
             var editButton;
             var deleteButton;

@@ -17,9 +17,9 @@
             <td>@student.FirstName</td>
             <td>@student.LastName</td>
             <td>@student.DisplayName</td>
-            <td>@student.Email</td>
+            <td><a href="mailto:' + @student.Email + '" title="' + @student.Email + '"><i class="bi bi-envelope-fill "></i></a></td>
             <td>@student.Gender</td>
-            <td>@student.ContactNo</td>
+            <td><a href="tel:' + @student.ContactNo + '"><i class="bi bi-telephone-fill text-success" data-toggle="tooltip" title="' + @student.ContactNo + '"></i></a></td>
             <td>
                 <button type="button" class="btn btn-sm btn-primary edit-btn" id="editBtn_@student.StudentID" onclick="editStudent('@student.StudentID')" disabled><i class="bi bi-pen small-icons"></i></button>
                 <button type="button" class="btn btn-sm btn-danger delete-btn" id="deleteBtn_@student.StudentID" onclick="deleteStudent('@student.StudentID',false,'@student.DisplayName')" disabled><i class="bi bi-trash small-icons"></i></button>

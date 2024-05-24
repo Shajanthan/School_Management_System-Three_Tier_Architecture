@@ -17,9 +17,9 @@
             <td>@teacher.FirstName</td>
             <td>@teacher.LastName</td>
             <td>@teacher.DisplayName</td>
-            <td>@teacher.Email</td>
+            <td><a href="mailto:' + @teacher.Email + '" title="' + @teacher.Email + '"><i class="bi bi-envelope-fill "></i></a></td>
             <td>@teacher.Gender</td>
-            <td>@teacher.ContactNo</td>
+            <td><a href="tel:' + @teacher.ContactNo + '"><i class="bi bi-telephone-fill text-success" data-toggle="tooltip" title="' + @teacher.ContactNo + '"></i></a></td>
             <td>
                 <button type="button" class="btn btn-sm btn-primary" id="editBtn_@teacher.TeacherID" onclick="editTeacher('@teacher.TeacherID')"><i class="bi bi-pen small-icons"></i></button>
                 <button type="button" class="btn btn-sm btn-danger" id="deleteBtn_@teacher.TeacherID" onclick="deleteTeacher('@teacher.TeacherID',false,'@teacher.DisplayName')"><i class="bi bi-trash small-icons"></i></button>
