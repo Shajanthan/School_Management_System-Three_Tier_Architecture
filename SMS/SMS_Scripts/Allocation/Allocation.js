@@ -276,6 +276,7 @@ function addStudentAllocationSuccess(response) {
         }).then((result) => {
             if (result.isConfirmed) {
                 loadStudentAllocationData();
+                loadSubjectAllocationData()
                 $('#addStudentAllocationForm').hide();
                 $('#subjectAllocationID').val('');
                 $('#addStudentAllocationForm').find('select').val('');
@@ -313,6 +314,7 @@ function deleteStudentAllocation(studentAllocationID) {
                     if (response.success) {
                         $('#studentAllocationTableBody tr:has(td:contains(' + studentAllocationID + '))').remove();
                         loadStudentAllocationData();
+                        loadSubjectAllocationData()
                         Swal.fire('Deleted!', 'Student Allocation deleted successfully.', 'success');
                     }
                 },
@@ -343,6 +345,7 @@ function deleteAllStudentAllocation(studentID,name) {
                     if (response.success) {
                         $('#studentAllocationTableBody tr:has(td:contains(' + studentID + '))').remove();
                         loadStudentAllocationData();
+                        loadSubjectAllocationData()
                         Swal.fire('Deleted!', 'Student Allocation deleted successfully.', 'success');
                     }
                 },
@@ -369,6 +372,7 @@ function editStudentAllocation(studentAllocationID) {
                 type: 'GET',
                 success: function (response) {
                     if (response.success) {
+                       
                         $.each(response.data, function (index, item) {
                             $('#subjectDropdown').append($('<option>', {
                                 value: item.SubjectID,

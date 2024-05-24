@@ -28,20 +28,20 @@
                     </p>
                     <script>
                          $.ajax({
-                           //check the subject allocation in use or not
-                           url: '/Allocation/IsSubjectAllocationInUse',
-                           type: 'GET',
-                             data: { subjectAllocationID: '@subjectAllocation.SubjectAllocationID' },
-                           success: function (response) {
-                               if (response) {
-                                   $('#editBtn_@subjectAllocation.SubjectAllocationID, #deleteBtn_@subjectAllocation.SubjectAllocationID').hide();
-                               }
-                               else
-                               {
-                                   $('#editBtn_@subjectAllocation.SubjectAllocationID, #deleteBtn_@subjectAllocation.SubjectAllocationID').prop('disabled', false);
-                               }
-                           }
-                       });
+                              //check the subject allocation in use or not
+                              url: '/Allocation/IsSubjectAllocationInUse',
+                              type: 'GET',
+                              data: { subjectAllocationID: '@subjectAllocation.SubjectAllocationID' },
+                              success: function (response) {
+                                  if (response) {
+                                      $('#editBtn_@subjectAllocation.SubjectAllocationID, #deleteBtn_@subjectAllocation.SubjectAllocationID').hide();
+                                  }
+                                  else
+                                  {
+                                      //$('#editBtn_@subjectAllocation.SubjectAllocationID, #deleteBtn_@subjectAllocation.SubjectAllocationID').prop('disabled', false);
+                                  }
+                              }
+                         });
                     </script>
                 }
             </td>
