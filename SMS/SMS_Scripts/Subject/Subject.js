@@ -107,7 +107,7 @@ async function loadData(currentPage, pageSize) {
                 editButton = '<button type="button" class="btn btn-sm btn-primary" onclick="editSubject(\'' + item.SubjectID + '\')"><i class="bi bi-pen small-icons"></i></button> ';
                 deleteButton = '<button type="button" class="btn btn-sm btn-danger" onclick="deleteSubject(\'' + item.SubjectID + '\', ' + toggleState + ', \'' + item.Name + '\')"><i class="bi bi-trash small-icons"></i></button>';
             } else {
-                editButton = "";
+                editButton = '<span class="badge bg-primary">Allocated</span>';
                 deleteButton = "";
             }
 

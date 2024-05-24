@@ -23,6 +23,7 @@
             <td>
                 <button type="button" class="btn btn-sm btn-primary" id="editBtn_@teacher.TeacherID" onclick="editTeacher('@teacher.TeacherID')"><i class="bi bi-pen small-icons"></i></button>
                 <button type="button" class="btn btn-sm btn-danger" id="deleteBtn_@teacher.TeacherID" onclick="deleteTeacher('@teacher.TeacherID',false,'@teacher.DisplayName')"><i class="bi bi-trash small-icons"></i></button>
+                <span id="badge_@teacher.TeacherID" class='badge bg-primary'>Allocated</span>
                 <button type="button" class="btn btn-sm btn-info m-1" onclick="moreDetails('@teacher.TeacherID',false,'@teacher.DisplayName')"><i class="bi bi-ticket-detailed small-icons"></i></button>
 
             </td>
@@ -36,10 +37,12 @@
                success: function (response) {
                    if (response) {
                        $('#editBtn_@teacher.TeacherID, #deleteBtn_@teacher.TeacherID').hide();
+                       $('#badge_@teacher.TeacherID').show();
                    }
                    else
                    {
                        //$('#editBtn_@teacher.TeacherID, #deleteBtn_@teacher.TeacherID').prop('disabled', false);
+                       $('#badge_@teacher.TeacherID').hide();
                    }
                }
            });

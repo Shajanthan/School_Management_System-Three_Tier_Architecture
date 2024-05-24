@@ -25,6 +25,7 @@
                     <p>
                         <button type="button" class="btn btn-sm btn-primary" id="editBtn_@subjectAllocation.SubjectAllocationID" onclick="editSubjectAllocation(@subjectAllocation.SubjectAllocationID)"><i class="bi bi-pen small-icons"></i></button>
                         <button type="button" class="btn btn-sm btn-danger" id="deleteBtn_@subjectAllocation.SubjectAllocationID" onclick="deleteSubjectAllocation(@subjectAllocation.SubjectAllocationID)"><i class="bi bi-trash small-icons"></i></button>
+                        <span id="badge_@subjectAllocation.SubjectAllocationID" class='badge bg-primary'>Allocated</span>
                     </p>
                     <script>
                         $.ajax({
@@ -35,10 +36,11 @@
                           success: function (response) {
                               if (response) {
                                   $('#editBtn_@subjectAllocation.SubjectAllocationID, #deleteBtn_@subjectAllocation.SubjectAllocationID').hide();
+                                  $('#badge_@subjectAllocation.SubjectAllocationID').show();
                               }
                               else
                               {
-                                  //$('#editBtn_@subjectAllocation.SubjectAllocationID, #deleteBtn_@subjectAllocation.SubjectAllocationID').prop('disabled', false);
+                                   $('#badge_@subjectAllocation.SubjectAllocationID').hide();
                               }
                           }
                       });

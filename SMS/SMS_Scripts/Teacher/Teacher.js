@@ -109,7 +109,7 @@ async function loadData(currentPage, pageSize) {
                 deleteButton = '<button type="button" class="btn btn-sm btn-danger" onclick="deleteTeacher(\'' + item.TeacherID + '\', ' + toggleState + ', \'' + item.FirstName + ' ' + item.LastName + '\')"><i class="bi bi-trash small-icons"></i></button>';
             }
             else {
-                editButton = "";
+                editButton = '<span class="badge bg-primary">Allocated</span>';
                 deleteButton = "";
             }
 

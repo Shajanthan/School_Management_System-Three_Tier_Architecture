@@ -21,9 +21,11 @@
             <td>@student.Gender</td>
             <td><a href="tel:' + @student.ContactNo + '"><i class="bi bi-telephone-fill text-success" data-toggle="tooltip" title="' + @student.ContactNo + '"></i></a></td>
             <td>
-                <button type="button" class="btn btn-sm btn-primary edit-btn" id="editBtn_@student.StudentID" onclick="editStudent('@student.StudentID')" disabled><i class="bi bi-pen small-icons"></i></button>
-                <button type="button" class="btn btn-sm btn-danger delete-btn" id="deleteBtn_@student.StudentID" onclick="deleteStudent('@student.StudentID',false,'@student.DisplayName')" disabled><i class="bi bi-trash small-icons"></i></button>
+                <button type="button" class="btn btn-sm btn-primary" id="editBtn_@student.StudentID" onclick="editStudent('@student.StudentID')"><i class="bi bi-pen small-icons"></i></button>
+                <button type="button" class="btn btn-sm btn-danger" id="deleteBtn_@student.StudentID" onclick="deleteStudent('@student.StudentID',false,'@student.DisplayName')"><i class="bi bi-trash small-icons"></i></button>
+                <span id="badge_@student.StudentID" class='badge bg-primary'>Allocated</span>
                 <button type="button" class="btn btn-sm btn-info m-1" onclick="moreDetails('@student.StudentID',false,'@student.DisplayName')"><i class="bi bi-ticket-detailed small-icons"></i></button>
+
             </td>
         </tr>
         <script>
@@ -35,9 +37,12 @@
                 success: function (response) {
                     if (response) {
                         $('#editBtn_@student.StudentID, #deleteBtn_@student.StudentID').hide();
+                        $('#badge_@student.StudentID').show();
                     }
-                    else {
+                    else
+                    {
                         //$('#editBtn_@student.StudentID, #deleteBtn_@student.StudentID').prop('disabled', false);
+                        $('#badge_@student.StudentID').hide();
                     }
                 }
             });

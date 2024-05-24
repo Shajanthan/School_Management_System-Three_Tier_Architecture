@@ -18,6 +18,7 @@
             <td>
                 <button type="button" class="btn btn-sm btn-primary" id="editBtn_@subject.SubjectID" onclick="editSubject('@subject.SubjectID')"><i class="bi bi-pen small-icons"></i></button>
                 <button type="button" class="btn btn-sm btn-danger" id="deleteBtn_@subject.SubjectID" onclick="deleteSubject('@subject.SubjectID',false,'@subject.Name')"><i class="bi bi-trash small-icons"></i></button>
+                <span id="badge_@subject.SubjectID" class='badge bg-primary'>Allocated</span>
             </td>
         </tr>
         <script>
@@ -29,10 +30,12 @@
               success: function (response) {
                   if (response) {
                       $('#editBtn_@subject.SubjectID, #deleteBtn_@subject.SubjectID').hide();
+                      $('#badge_@subject.SubjectID').show();
                   }
                   else
                   {
                       //$('#editBtn_@subject.SubjectID, #deleteBtn_@subject.SubjectID').prop('disabled', false);
+                      $('#badge_@subject.SubjectID').hide();
                   }
               }
           });
