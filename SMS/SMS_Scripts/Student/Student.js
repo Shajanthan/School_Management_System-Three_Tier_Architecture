@@ -131,8 +131,9 @@ async function loadData(currentPage, pageSize) {
         updatePagination(currentPage, totalPages);
     }
     catch (error) {
-        console.log(error);
-        alert('An error occurred while loading data.');
+        var row = '<tr>' + '<td colspan="9">' + "No data Found"+'</td>' +'</tr>';
+        $('#tableBody').append(row);
+
     }
 }
 

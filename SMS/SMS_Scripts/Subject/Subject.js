@@ -131,8 +131,8 @@ async function loadData(currentPage, pageSize) {
     }
 
     catch (error) {
-        console.log(error);
-        alert('An error occurred while loading data.');
+        var row = '<tr>' + '<td colspan="4">' + "No data Found" + '</td>' + '</tr>';
+        $('#tableBody').append(row);
     }
         
 }
